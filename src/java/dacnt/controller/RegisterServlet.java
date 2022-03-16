@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 public class RegisterServlet extends HttpServlet {
 
     private final String ERROR_PAGE = "errorpage.jsp";
-    private final String INDEX_PAGE_URL = "index.html";
+    private final String REGISTER_PAGE = "register.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,7 +39,6 @@ public class RegisterServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = ERROR_PAGE;
         try {
             String email = request.getParameter("txtEmail");
             String fullname = request.getParameter("txtFullname");
@@ -53,7 +52,7 @@ public class RegisterServlet extends HttpServlet {
                 request.setAttribute("txtFullname", fullname);
                 request.setAttribute("txtPhone", phone);
                 request.setAttribute("ERROR", "the phone is invalid");
-                request.getRequestDispatcher("registration.jsp")
+                request.getRequestDispatcher(REGISTER_PAGE)
                         .forward(request, response);
                 return;
             }
@@ -74,9 +73,7 @@ public class RegisterServlet extends HttpServlet {
             } else {
                 response.sendRedirect(ERROR_PAGE);
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (NamingException ex) {
+        } catch (SQLException | NamingException ex) {
             ex.printStackTrace();
         } finally {
 //            response.sendRedirect(url);

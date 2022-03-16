@@ -8,63 +8,54 @@
 <%@page import="dacnt.plant.PlantDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>index</title>
+        <title>Index</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
 
     </head>
     <body>
-        <header>
-            <%@include file="header.jsp" %>
-        </header>
+        <%@include file="header.jsp" %>
         <section>
             <%
                 session.setAttribute("lastUrl", "DispatchController?action=index");
 
-                String keyword = request.getParameter("txtSearch");
-                String searchby = request.getParameter("searchby");
-                ArrayList<PlantDTO> list;
-                PlantDAO dao = PlantDAO.getInstance();
-                String[] tmp = {"out of stock", "available"};
-                if (keyword == null && searchby == null) {
-                    // when the page is loaded, display all products
-                    dao.searchPlants("", "");
-                } else {
-                    dao.searchPlants(keyword, searchby);
-                }
-                // get list of plantdto
-                list = dao.getPlants();
-
-                if (list != null && !list.isEmpty()) {
-                    for (PlantDTO dto : list) {
             %> 
-            <table class="product">
-                <tr>
-                    <td> <img src="<%= dto.getImgPath()%>" class ="plantimg" /> </td>
-                    <td> Product ID: <a href="DispatchController?action=viewPlant&plantID=<%= dto.getId()%>"><%= dto.getId()%></a> </td>
-                    <td> Product Name: <%= dto.getName()%> </td>
-                    <td> Price: <%= dto.getPrice()%> </td>
-                    <td> Status: <%= tmp[dto.getStatus()]%> </td>
-                    <td> Category: <%= dto.getCatename()%> </td>
-                    <%
-                        if (currentUser == null || currentUser.getRole() == 0) {
-                    %>
-                    <td> <a href="DispatchController?action=addToCart&plantID=<%= dto.getId()%>">add to cart</a> </td>
-                    <%}%>
-                </tr>
-            </table>
 
-            <%
-                    }
-                }
-            %>
+            <c:set var="PLANTS" value="${requestScope.PLANTS}"/>
+            <c:if test="${not empty PLANTS}">
+                <c:set var="status" value="${fn:split('out of stock, available', ',')}" />
+                <c:forEach var="plant" items="${PLANTS}">
+                    <table class="product">
+                        <tr>
+                            <td> 
+                                <img src="${plant.imgPath}" class="plantimg" /> 
+                            </td>
+                            <td> Product ID: 
+                                <a href="DispatchController?action=viewPlant&plantID=${plant.id}">
+                                    ${plant.id}
+                                </a> 
+                            </td>
+                            <td> Product Name: ${plant.name} </td>
+                            <td> Price: ${plant.price} </td>
+                            <td> Status: ${ status[plant.status]} </td>
+                            <td> Category: ${plant.catename} </td>
+                            <td> 
+                                <a href="DispatchController?action=addToCart&plantID=${plant.id}">
+                                    add to cart
+                                </a> 
+                            </td>
+                        </tr>
+                    </table>
+                </c:forEach>
+            </c:if>
         </section>
-        <footer>
-            <%@include file="footer.jsp" %>
-        </footer>
+        <%@include file="footer.jsp" %>
     </body>
 </html>
 

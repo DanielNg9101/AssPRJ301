@@ -7,77 +7,48 @@
 <%@page import="dacnt.account.AccountDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="/WEB-INF/tlds/customtag" prefix="ct" %>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-    </head>
-    <body>
-        <header>
-            <nav>
-                <ul>
-                    <li> <a href="DispatchController"> <img src="images/logo.jpg" id="logo" class="plantimg" /> </a> </li>
-                    <li> <a href="DispatchController">Home</a> </li>
-                        <%
-                            AccountDTO currentUser = (AccountDTO) session.getAttribute("CURRENT_USER");
-                            AccountDTO adminAcc = null;
-                            if (currentUser == null) {
-                                currentUser = (AccountDTO) session.getAttribute("ADMIN");
-                            }
-                            if (currentUser == null) {
-                        %>
-                    <li> <a href="DispatchController?action=registerHandler">Register</a> </li>
-                    <li> <a href="DispatchController?action=loginHandler">Login</a> </li>
-                        <%
-                        } else {
-                            if (currentUser.getRole() == 0) { // user account
-                        %>
-                    <li> <a href="DispatchController?action=viewOrders&category=">Personal Page</a> </li>
-                        <%
-                            } else { // menu of admin account
-                                adminAcc = currentUser;
-                        %>
-                    <li> <a href="AdminController?action=viewAccounts">all accounts</a> </li>
-                    <li> <a href="AdminController?action=addPlant">add plant</a> </li>
-                    <li> <a href="AdminController?action=changeProfile&accID=<%= currentUser.getAccID()%>">change profile</a> </li>    
-                        <%
-                            }
-                        %>
-                        <%
-                            }
-                            if (currentUser
 
-                            == null || currentUser.getRole () 
-                            
-                            == 0) {
-                        %>
+<header>
+    <nav>
+        <ul>
+            <li> 
+                <a href="search"> 
+                    <img src="images/logo.jpg" id="logo" class="plantimg" /> 
+                </a> 
+            </li>
+            <li> 
+                <a href="search">Home</a> 
+            </li>
+            
+            <c:if test="${empty sessionScope.USER}">
+                <li> <a href="login.jsp">Login</a> </li>
+                <li> <a href="register.jsp">Register</a> </li>
+            </c:if>
+            <c:if test="${not empty sessionScope.USER}">
+                <li> <a href="logout">Logout</a> </li>
+            </c:if>
 
-                    <li> <a href="DispatchController?action=viewCart">View Cart</a> </li>
-                        <%}%>
-                        <%
-                            if (currentUser
+            <li> <a href="DispatchController?action=viewCart">View Cart</a> </li>
+            <li> <form action="search" method="POST" class="formsearch" >
+                    <input type="text" name="txtSearch" 
+                           value="${param.txtSearch}" />
+                    <select name="searchby">
+                        <option value="byname" 
+                                ${param.searchby.equals("byname") 
+                                  ? "selected" : "" }>
+                            by name
+                        </option>
+                        <option value="bycate"
+                                ${param.searchby.equals("bycate") 
+                                  ? "selected" : "" }>
+                            by category
+                        </option>
+                    </select>
+                    <button type="submit">search</button>
+                </form> </li>
+        </ul>
+    </nav>
+</header>
 
-                            
-                            
-                            != null) {
-                        %>
-                    <li> <a href="DispatchController?action=logout">Logout</a> </li>
-                        <%}%>
-
-                    <li> <form action="DispatchController" method="POST" class="formsearch" >
-                            <input type="text" name="txtSearch" 
-                                   value="<%= request.getParameter("txtSearch") == null
-                                           ? "" : request.getParameter("txtSearch")%>" />
-                            <select name="searchby">
-                                <option value="byname">by name</option>
-                                <option value="bycate">by category</option>
-                            </select>
-                            <input type="submit" value="search" name="action" />
-                        </form> </li>
-                </ul>
-            </nav>
-        </header>
-    </body>
-</html>

@@ -26,7 +26,6 @@ import javax.servlet.http.HttpSession;
  */
 public class LoginServlet extends HttpServlet {
 
-    private final String WELCOME_PAGE = "welcome.html";
     private final String INVALID_PAGE = "invalid.jsp";
     private final String ADMIN_CONTROLLER = "AdminController";
 
@@ -83,9 +82,9 @@ public class LoginServlet extends HttpServlet {
                     } else {
                         // [USER]
                         // url rewriting forward to vieworderservlet
-                        String urlRewriting = "DispatchController?action=viewOrders&category=";
+                        String urlRewriting = "viewOrders";
                         url = urlRewriting;
-                        session.setAttribute("CURRENT_USER", acc);
+                        session.setAttribute("USER", acc);
 
                     }
                 }
@@ -132,9 +131,9 @@ public class LoginServlet extends HttpServlet {
                     } else {
                         // [USER]
                         // url rewriting forward to vieworderservlet
-                        String urlRewriting = "DispatchController?action=viewOrders&category=";
+                        String urlRewriting = "viewOrders";
                         url = urlRewriting;
-                        session.setAttribute("CURRENT_USER", acc);
+                        session.setAttribute("USER", acc);
 
                         // redirect to welcome page
 //                    url = WELCOME_PAGE;

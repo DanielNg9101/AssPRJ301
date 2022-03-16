@@ -5,23 +5,22 @@
  */
 package dacnt.controller;
 
+import dacnt.order.OrderDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.SQLException;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author dacng
  */
-@WebServlet(name = "LogoutServlet", urlPatterns = {"/LogoutServlet"})
-public class LogoutServlet extends HttpServlet {
-
-    private final String INDEX_PAGE_URL = "search";
+@WebServlet(name = "ChangeOrderStatusServlet", urlPatterns = {"/ChangeOrderStatusServlet"})
+public class ChangeOrderStatusServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,17 +33,36 @@ public class LogoutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String url = INDEX_PAGE_URL;
+        response.setContentType("text/html;charset=UTF-8");
+        OrderDAO dao = OrderDAO.getInstance();
+        
+        
+        // handle last request
+        String urlRewriting = "viewOrders?category=";
+        String category = request.getParameter("category");
+        urlRewriting += category;
+//        System.out.println(urlRewriting);
+        
         try {
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                // check lai
-                return;
-            } // end if session != null
+            int orderID = Integer.parseInt(request.getParameter("orderID"));
+            
+            String action = request.getParameter("action");
+            switch (action.trim()) {
+                case "cancelOrder":
+                    // call dao 1 -> 3
+                    dao.updateOrderStatus(orderID, "cancel");
+                    break;
 
-            session.invalidate();   // remoeve session to get new jsessionid
+                case "orderAgain":
+                    //call dao 3 -> 1
+                    dao.updateOrderStatus(orderID, "processing");
+                    break;
+
+            }
+        } catch (NamingException | SQLException | NumberFormatException ex) {
+            ex.printStackTrace();
         } finally {
-            response.sendRedirect(url);
+            response.sendRedirect(urlRewriting);
         }
     }
 

@@ -9,6 +9,9 @@
 <%@page import="dacnt.order.OrderDTO"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,81 +21,77 @@
 
     </head>
     <body>
-        <header>
-            <%@include file="header_loginedUser.jsp" %>
-        </header>
+        <%@include file="header_loginedUser.jsp" %>
+        <c:set var="USER" value="${sessionScope.USER}" scope="session"/>
+        <c:if test="${empty USER}">
+            <p style="color: red;"> 
+                you must <a href="login.jsp">login</a> to view personal page 
+            </p>  
+        </c:if>
 
-        <%            AccountDTO currentUser = (AccountDTO) session.getAttribute("CURRENT_USER");
-            if (currentUser == null) {
-        %> 
-        <p style="color: red;"> you must <a href="DispatchController?action=loginHandler">login</a> to view personal page </p>  
-        <%
-        } else {
-            String name = currentUser.getFullname();
-        %>
+        <c:if test="${not empty USER}">
+            <section>
+                <%--<h3>Welcome <%= name%> come back </h3>--%>
+                <ct:welcome name="${USER.fullname}"/>
+                <h3><a href="logout">Logout</a></h3>
+                <h3> <a href="DispatchController?action=viewCart">View Cart</a> </h3>
+            </section>
 
+            <section>
+                <!--load all orders of user at here-->
+                <c:set var="ORDERS" value="${requestScope.ORDERS}"/>
+                <c:if test="${empty ORDERS}">
+                    <p>You don't have any order</p>
+                </c:if>
 
-        <section>
-            <%--<h3>Welcome <%= name%> come back </h3>--%>
-            <ct:welcome name="<%= name %>"/>
-            <h3><a href="DispatchController?action=logout">Logout</a></h3>
-            <h3> <a href="DispatchController?action=viewCart">View Cart</a> </h3>
-        </section>
+                <c:if test="${not empty ORDERS}">
+                    <c:set var="status" value="${fn:split(' , processing, completed, canceled', ',')}" />
 
-        <section>
-            <!--load all orders of user at here-->
-            <%
-                String email = (String) session.getAttribute("EMAIL");
-                ArrayList<OrderDTO> list = (ArrayList<OrderDTO>) request.getAttribute("ORDERS");
-
-                String[] status = {"", "processing", "completed", "canceled"};
-
-                String category = request.getParameter("category");
-
-                if (list != null && !list.isEmpty()) {
-                    for (OrderDTO dto : list) {
-                        int orderID = dto.getOrderID();
-            %>
-            <table class="order">
-                <tr>
-                    <td>Order ID</td>
-                    <td>Order Date</td>
-                    <td>Ship Date</td>
-                    <td>Order's status</td>
-                    <td>Action</td>
-                </tr>
-                <tr>
-                    <td><%= orderID%></td>
-                    <td><%= dto.getOrderDate()%></td>
-                    <td><%= dto.getShipDate()%></td>
-                    <td><%= status[dto.getStatus()]%>
-                        <br/> <%
-                            if (dto.getStatus() == 1) {
-                        %> 
-                        <a href="DispatchController?action=cancelOrder&orderID=<%= orderID%>&category=<%= category%>" > Cancel Order</a>
-                        <% } else if (dto.getStatus() == 3) {
-                        %>
-                        <a href="DispatchController?action=orderAgain&orderID=<%= orderID%>&category=<%= category%>" >Order Again</a>
-                        <%}%>
-                    </td>
-                    <td> <a href="orderDetail.jsp?orderid=<%= dto.getOrderID()%>">Detail</a> </td>
-                </tr>
-            </table>
-
-            <%
-                }
-            } else {
-            %>
-            <p>You don't have any order</p>
-            <%
-                }
-            %>
-        </section>
-        <%
-            }
-        %>
-        <footer>
-            <%@include file="footer.jsp" %>
-        </footer>
+                    <c:forEach var="order" items="${ORDERS}">
+                        <table class="order">
+                            <tr>
+                                <td>Order ID</td>
+                                <td>Order Date</td>
+                                <td>Ship Date</td>
+                                <td>Order's status</td>
+                                <td>Action</td>
+                            </tr>
+                            <tr>
+                                <td>${order.orderID}</td>
+                                <td>${order.orderDate}</td>
+                                <td>${order.shipDate}</td>
+                                <td>
+                                    ${status[order.status]}<br/>
+                                    <c:choose>
+                                        <c:when test="${order.status == 1}">
+                                            <c:url var="cancelLink" value="changeOrderStatus">
+                                                <c:param name="orderID" value="${order.orderID}" />
+                                                <c:param name="category" value="${param.category}" />
+                                                <c:param name="action" value="cancelOrder" />
+                                            </c:url>
+                                            <a href="${cancelLink}" > 
+                                                Cancel Order
+                                            </a>
+                                        </c:when>
+                                        <c:when test="${order.status == 3}">
+                                            <c:url var="againLink" value="changeOrderStatus">
+                                                <c:param name="orderID" value="${order.orderID}" />
+                                                <c:param name="category" value="${param.category}" />
+                                                <c:param name="action" value="orderAgain" />
+                                            </c:url>
+                                            <a href="${againLink}"  >
+                                                Order Again
+                                            </a>
+                                        </c:when>
+                                    </c:choose>
+                                </td>
+                                <td> <a href="orderDetail.jsp?orderid=${order.orderID}">Detail</a> </td>
+                            </tr>
+                        </table>
+                    </c:forEach>
+                </c:if>
+            </section>
+        </c:if>
+        <%@include file="footer.jsp" %>
     </body>
 </html>
