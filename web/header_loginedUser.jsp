@@ -12,7 +12,7 @@
         <ul>
             <li> <a href="search"> <img src="images/logo.jpg" id="logo" class="plantimg" /> </a> </li>
             <li> <a href="search">Home</a> </li>
-            <li> <a href="changeProfile">change profile</a> </li>
+            <li> <a href="changeProfile.jsp">change profile</a> </li>
             <li> <a href="viewOrders">all orders</a> </li>
             <li> <a href="viewOrders?category=completed">completed orders</a> </li>
             <li> <a href="viewOrders?category=canceled">canceled orders</a> </li>

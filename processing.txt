@@ -14,5 +14,6 @@ index.jsp
 personalPage.jsp
  - viewcart chua sua
  - cancel, order again chua sua ==> done
- - detail
+ - detail ==> done
  - searchbydate chưa làm ==> done
+ - change profile + log lỗi ==> done

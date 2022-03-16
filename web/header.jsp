@@ -27,6 +27,7 @@
                 <li> <a href="register.jsp">Register</a> </li>
             </c:if>
             <c:if test="${not empty sessionScope.USER}">
+                <li> <a href="viewOrders">Personal Page</a> </li>
                 <li> <a href="logout">Logout</a> </li>
             </c:if>
 

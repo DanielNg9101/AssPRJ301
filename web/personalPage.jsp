@@ -85,7 +85,11 @@
                                         </c:when>
                                     </c:choose>
                                 </td>
-                                <td> <a href="orderDetail.jsp?orderid=${order.orderID}">Detail</a> </td>
+                                <td> 
+                                    <a href="viewOrderDetail?orderid=${order.orderID}">
+                                        Detail
+                                    </a> 
+                                </td>
                             </tr>
                         </table>
                     </c:forEach>
