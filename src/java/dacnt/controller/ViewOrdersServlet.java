@@ -54,11 +54,13 @@ public class ViewOrdersServlet extends HttpServlet {
         try {
             HttpSession session = request.getSession(false);
             if (session == null) {
+                request.setAttribute("ERROR", "You must login to view orders");
                 return;
             } // end if session != null
 
             AccountDTO currentUser = (AccountDTO) session.getAttribute("USER");
             if (currentUser == null) {
+                request.setAttribute("ERROR", "You must login to view orders");
                 return;
             } // end if current user != null
 

@@ -25,14 +25,18 @@
         <%@include file="header.jsp" %>
 
         <c:if test="${empty sessionScope.USER}">
-            <p style="color: red;"> you must <a href="login.jsp">login</a> 
-                to view order detail</p>  
-            </c:if>
+            <%
+                request.setAttribute("ERROR",
+                        "You must login to view order detail");
+                request.getRequestDispatcher("login.jsp")
+                        .forward(request, response);
+            %>
+        </c:if>
 
         <c:if test="${not empty sessionScope.USER}">
             <section>
                 <ct:welcome name="${sessionScope.USER.fullname}"/>
-                <h3><a href="DispatchController?action=logout">Logout</a></h3>
+                <h3><a href="logout">Logout</a></h3>
             </section>
             <section>
                 <!--load all orders of user at here-->

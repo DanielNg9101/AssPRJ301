@@ -20,9 +20,19 @@
             <form action="login" method="POST" class="formlogin">
                 <h1>Login</h1>
                 <table>
+                    <c:if test="${not empty requestScope.ERROR}">
+                        <tr>
+                            <td colspan="2">
+                                <p style="color: red;">${requestScope.ERROR}</p>
+                            </td>
+                        </tr>
+                    </c:if>
                     <tr>
                         <td>email</td>
-                        <td> <input type="text" name="txtEmail"/> </td>
+                        <td> <input type="text" 
+                                    name="txtEmail"
+                                    value="${param.txtEmail}"
+                                    /> </td>
                     </tr>
                     <tr>
                         <td>password</td>

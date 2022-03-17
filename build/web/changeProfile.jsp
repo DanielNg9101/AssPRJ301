@@ -21,13 +21,25 @@
         <%@include file="header_loginedUser.jsp" %>
         <h1>Change Profile</h1>
         <c:if test="${empty sessionScope.USER}">
-            <p style="color: red;"> you must <a href="login.jsp">login</a> 
-                to use this function </p>  
-            </c:if>
+            <%
+                request.setAttribute("ERROR",
+                        "You must login to use this function");
+                request.getRequestDispatcher("login.jsp")
+                        .forward(request, response);
+            %>
+
+        </c:if>
 
         <c:if test="${not empty sessionScope.USER}">
             <form action="changeProfile" method="POST" class="formregister">
                 <table>
+                    <c:if test="${not empty requestScope.ERROR}">
+                        <tr>
+                            <td colspan="2">
+                                <p style="color: red;">${requestScope.ERROR}</p>
+                            </td>
+                        </tr>
+                    </c:if>
                     <tr>
                         <td>email</td>
                         <td> 
@@ -52,13 +64,6 @@
                                     required="" 
                                     value="${sessionScope.USER.phone}" /> </td>
                     </tr>
-                    <c:if test="${not empty requestScope.ERROR}">
-                        <tr>
-                            <td colspan="2">
-                                <p style="color: red;">${requestScope.ERROR}</p>
-                            </td>
-                        </tr>
-                    </c:if>
                     <tr>
                         <td colspan="2"> <button type="submit">Submit</button> </td>
                     </tr>

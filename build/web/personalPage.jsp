@@ -24,9 +24,12 @@
         <%@include file="header_loginedUser.jsp" %>
         <c:set var="USER" value="${sessionScope.USER}" scope="session"/>
         <c:if test="${empty USER}">
-            <p style="color: red;"> 
-                you must <a href="login.jsp">login</a> to view personal page 
-            </p>  
+            <%
+                request.setAttribute("ERROR",
+                        "You must login to view personal page");
+                request.getRequestDispatcher("login.jsp")
+                        .forward(request, response);
+            %>
         </c:if>
 
         <c:if test="${not empty USER}">

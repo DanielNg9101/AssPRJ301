@@ -5,6 +5,7 @@
  */
 package dacnt.controller;
 
+import dacnt.account.AccountDTO;
 import dacnt.order.OrderDAO;
 import dacnt.order.OrderDetailDTO;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ViewOrderDetailServlet extends HttpServlet {
 
     private final String ORDER_DETAIL_PAGE = "orderDetail.jsp";
+    private final String LOGIN_PAGE = "login.jsp";
     private final String INDEX_PAGE_URL = "search";
 
     /**
@@ -41,6 +44,20 @@ public class ViewOrderDetailServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = ORDER_DETAIL_PAGE;
         try {
+            HttpSession session = request.getSession(false);
+            if (session == null) {
+                request.setAttribute("ERROR", "You must login to view order detail");
+                url = LOGIN_PAGE;
+                return;
+            } // end if session != null
+
+            AccountDTO currentUser = (AccountDTO) session.getAttribute("USER");
+            if (currentUser == null) {
+                request.setAttribute("ERROR", "You must login to view order detail");
+                url = LOGIN_PAGE;
+                return;
+            } // end if current user != null
+
             String orderid = request.getParameter("orderid");
             if (orderid != null) {
                 int orderID = Integer.parseInt(orderid);

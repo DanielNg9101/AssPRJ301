@@ -17,3 +17,6 @@ personalPage.jsp
  - detail ==> done
  - searchbydate chưa làm ==> done
  - change profile + log lỗi ==> done
+
+error.jsp
+ - chưa tạo trang lỗi chung
