@@ -10,6 +10,7 @@ header.jsp
 index.jsp
  - sua co che thong qua seachservlet ==> DONE
  - sau khi làm tính năng addplant thì  kiểm tra lại xem có search được plant tên có chữ hoa không
+ - reconform chonj sản phẩm
 
 personalPage.jsp
  - viewcart chua sua
@@ -20,3 +21,11 @@ personalPage.jsp
 
 error.jsp
  - chưa tạo trang lỗi chung
+
+plant.jsp
+ - reconform chonj sản phẩm
+
+
+mapping:
+ viewOrders --> personalPage.jsp => chưa fix nếu người dùng nhập personalpage.jsp trên url thì nó ko qua servlet ==> fix ở filter
+ search --> index.jsp

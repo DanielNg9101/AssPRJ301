@@ -17,10 +17,30 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Index</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('.addToCartLink').click(function (e) {
+                    e.preventDefault();
+                    // console.log(e.target.search)
+                    const reconform = confirm("Add to cart?");
+                    if (reconform) {
+                        const plantID = e.target.search.split("=")[1]
+                        console.log(plantID)
+                        axios.get('addToCart?plantID=' + plantID)
+                    }
+                });
+            });
+        </script> 
 
     </head>
     <body>
         <%@include file="header.jsp" %>
+        <c:if test="${not empty requestScope.WARNING}">
+            <font style="color: red;"> ${requestScope.WARNING} </font>
+        </c:if>
         <section>
             <%
                 session.setAttribute("lastUrl", "DispatchController?action=index");
@@ -46,7 +66,8 @@
                             <td> Status: ${ status[plant.status]} </td>
                             <td> Category: ${plant.catename} </td>
                             <td> 
-                                <a href="DispatchController?action=addToCart&plantID=${plant.id}">
+                                <a href="addToCart?plantID=${plant.id}"
+                                   class="addToCartLink">
                                     add to cart
                                 </a> 
                             </td>

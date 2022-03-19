@@ -31,7 +31,7 @@
                 <li> <a href="logout">Logout</a> </li>
             </c:if>
 
-            <li> <a href="DispatchController?action=viewCart">View Cart</a> </li>
+            <li> <a href="viewCart.jsp">View Cart</a> </li>
             <li> <form action="search" method="POST" class="formsearch" >
                     <input type="text" name="txtSearch" 
                            value="${param.txtSearch}" />

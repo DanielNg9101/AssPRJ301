@@ -12,7 +12,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Change Profile</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
 
 
@@ -27,7 +27,6 @@
                 request.getRequestDispatcher("login.jsp")
                         .forward(request, response);
             %>
-
         </c:if>
 
         <c:if test="${not empty sessionScope.USER}">

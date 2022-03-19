@@ -109,7 +109,7 @@ public class ViewOrdersServlet extends HttpServlet {
             }
 
             ArrayList<OrderDTO> orders = dao.getOrdersList();
-            System.out.println(orders);
+//            System.out.println(orders);
             request.setAttribute("ORDERS", orders);
 //        } catch (NamingException | SQLException | ParseException ex) {
         } catch (NamingException | SQLException | ParseException ex) {

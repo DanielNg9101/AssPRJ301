@@ -37,7 +37,7 @@
                 <%--<h3>Welcome <%= name%> come back </h3>--%>
                 <ct:welcome name="${USER.fullname}"/>
                 <h3><a href="logout">Logout</a></h3>
-                <h3> <a href="DispatchController?action=viewCart">View Cart</a> </h3>
+                <h3> <a href="viewCart.jsp">View Cart</a> </h3>
             </section>
 
             <section>
