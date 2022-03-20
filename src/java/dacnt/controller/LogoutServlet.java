@@ -42,7 +42,7 @@ public class LogoutServlet extends HttpServlet {
                 return;
             } // end if session != null
 
-            session.invalidate();   // remoeve session to get new jsessionid
+            session.invalidate();   // remove session to get new jsessionid
         } finally {
             response.sendRedirect(url);
         }

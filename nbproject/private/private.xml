@@ -10,7 +10,9 @@
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/footer.jsp</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/utils/DBUtils.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/ViewOrderDetailServlet.java</file>
+            <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/viewCart.jsp</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/plant/PlantDAO.java</file>
+            <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/DeleteCartServlet.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/header_loginedUser.jsp</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/account/AccountDAO.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/orderDetail.jsp</file>
@@ -19,13 +21,18 @@
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/SearchServlet.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/invalid.jsp</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/LoginServlet.java</file>
+            <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/AddToCartServlet.java</file>
+            <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/scripts/addToCart.js</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/account/AccountDTO.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/index.jsp</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/MainController.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/SendOTP.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/order/OrderDAO.java</file>
+            <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/styles/mycss.css</file>
+            <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/SaveShoppingCartServlet.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/custom/tag/welcome.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/ViewOrdersServlet.java</file>
+            <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/UpdateCartServlet.java</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/header.jsp</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/web/META-INF/context.xml</file>
             <file>file:/D:/JavaWeb/Workshop/Ver2PlantShop/src/java/dacnt/controller/LogoutServlet.java</file>

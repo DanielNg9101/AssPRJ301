@@ -28,7 +28,7 @@ public class ViewOrderDetailServlet extends HttpServlet {
 
     private final String ORDER_DETAIL_PAGE = "orderDetail.jsp";
     private final String LOGIN_PAGE = "login.jsp";
-    private final String INDEX_PAGE_URL = "search";
+    private final String INDEX_PAGE_URL = "SearchServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

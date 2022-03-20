@@ -12,11 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,10 +23,9 @@ import javax.servlet.http.HttpSession;
  *
  * @author Daniel NG
  */
-@WebServlet(name = "SaveShoppingCartServlet", urlPatterns = {"/SaveShoppingCartServlet"})
 public class SaveShoppingCartServlet extends HttpServlet {
 
-    private final String INDEX_PAGE_URL = "search";
+    private final String INDEX_PAGE_URL = "SearchServlet";
     private final String VIEW_CART_PAGE_URL = "viewCart.jsp";
 
     /**
@@ -77,13 +73,12 @@ public class SaveShoppingCartServlet extends HttpServlet {
                 request.setAttribute("WARNING", warning);
             }
 
-        } catch (NamingException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             ex.printStackTrace();
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

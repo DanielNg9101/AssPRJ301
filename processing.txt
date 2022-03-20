@@ -1,19 +1,19 @@
 login.jsp
- - sửa cơ chế log lỗi, warning của login cho giống với register
+ - sửa cơ chế log lỗi, warning của login cho giống với register ==> done
 
 register.jsp
  - sửa sendotpservlet
 
 header.jsp
- - cart chưa làm, link đã fix
+ - cart chưa làm, link đã fix ==> done
 
 index.jsp
  - sua co che thong qua seachservlet ==> DONE
  - sau khi làm tính năng addplant thì  kiểm tra lại xem có search được plant tên có chữ hoa không
- - reconform chonj sản phẩm
+ - reconform chon sản phẩm ==> done
 
 personalPage.jsp
- - viewcart chua sua
+ - viewcart  ==> done
  - cancel, order again chua sua ==> done
  - detail ==> done
  - searchbydate chưa làm ==> done
@@ -23,9 +23,11 @@ error.jsp
  - chưa tạo trang lỗi chung
 
 plant.jsp
- - reconform chonj sản phẩm
+ - reconform chọn sản phẩm
 
 
 mapping:
  viewOrders --> personalPage.jsp => chưa fix nếu người dùng nhập personalpage.jsp trên url thì nó ko qua servlet ==> fix ở filter
- search --> index.jsp
+ SearchServlet --> index.jsp => lỗi nhưng không biết fix như nào
+
+

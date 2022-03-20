@@ -40,6 +40,10 @@
         <servlet-name>ViewOrderDetailServlet</servlet-name>
         <servlet-class>dacnt.controller.ViewOrderDetailServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SaveShoppingCartServlet</servlet-name>
+        <servlet-class>dacnt.controller.SaveShoppingCartServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -67,6 +71,10 @@
     <servlet-mapping>
         <servlet-name>ViewOrderDetailServlet</servlet-name>
         <url-pattern>/ViewOrderDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveShoppingCartServlet</servlet-name>
+        <url-pattern>/SaveShoppingCartServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

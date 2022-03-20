@@ -125,6 +125,7 @@ public class MainController implements Filter {
 
                 if (resource.contains(".jsp")
                         || resource.contains(".css")
+                        || resource.contains(".js")
                         || resource.contains(".jpg")) {
                     url = resource;
                 }

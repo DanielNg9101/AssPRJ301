@@ -18,11 +18,7 @@
         <title>View Cart</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
 
-        <script>
-            function reconfirm() {
-                return confirm("Do you want to delete?");
-            }
-        </script>
+        <script src="scripts/procesingCart.js"></script>
 
     </head>
     <body>
@@ -32,7 +28,6 @@
 
         <c:if test="${not empty USER}">
             <section>
-                <%--<h3>Welcome <%= name%> come back </h3>--%>
                 <ct:welcome name="${USER.fullname}"/>
                 <h3><a href="logout">Logout</a></h3>
                 <h3> 
@@ -66,7 +61,7 @@
                         <c:forEach var="plant" items="${plants}">
                             <tr>
                                 <td> 
-                                    <a href="DispatchController?action=viewPlant&plantID=${plant.id}">${plant.id}</a>
+                                    <a href="viewPlant?plantID=${plant.id}">${plant.id}</a>
                                 </td>
                                 <td> <img src="${plant.imgPath}" class ="plantimg" /> </td>
                                 <td>${plant.price}</td>
@@ -83,8 +78,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="" 
-                                                       onclick="this.closest('form').submit();
-                                                               return false;">Update</a>
+                                                       onclick="return updateCart(this);">Update</a>
                                                 </td>
                                             </tr>
                                         </table>
@@ -96,7 +90,7 @@
                                         <c:param name="plantID" value="${plant.id}"/>
                                     </c:url>
                                     <a href="${deleteLink}" 
-                                       onclick="return reconfirm()" >
+                                       onclick="return deleteCart()" >
                                         Delete
                                     </a>
                                 </td>
@@ -119,7 +113,8 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <h2> <a href="saveShoppingCart">Save</a> </h2>
+                                <h2> <a href="saveShoppingCart"
+                                        onclick="return saveCart()">Save</a> </h2>
                             </td>
                         </tr>
                     </c:if>

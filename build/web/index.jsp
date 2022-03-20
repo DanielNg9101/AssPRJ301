@@ -57,7 +57,7 @@
                                 <img src="${plant.imgPath}" class="plantimg" /> 
                             </td>
                             <td> Product ID: 
-                                <a href="DispatchController?action=viewPlant&plantID=${plant.id}">
+                                <a href="viewPlant?plantID=${plant.id}">
                                     ${plant.id}
                                 </a> 
                             </td>

@@ -10,25 +10,22 @@ import dacnt.plant.PlantDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author Daniel NG
  */
-@WebServlet(name = "AddToCartServlet", urlPatterns = {"/AddToCartServlet"})
-public class AddToCartServlet extends HttpServlet {
+public class ViewPlantServlet extends HttpServlet {
 
-    private final String INDEX_PAGE_URL = "SearchServlet";
+    private final String INDEX_PAGE_URL = "SearchServlet ";
+    private final String PLANT_PAGE_URL = "plant.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -43,69 +40,30 @@ public class AddToCartServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String url = INDEX_PAGE_URL;
-        try {            
-            // get the selected id
-            String plantIDString = request.getParameter("plantID");
-            
-            if (plantIDString.isEmpty()) {
-                return;
-            }
-            int plantID = Integer.parseInt(plantIDString);
-            
-//            System.out.println(plantID);
-           
+        try {
+            int plantID = Integer.parseInt(request.getParameter("plantID"));
 
-            // get session to store product id ==> get true
-            HttpSession session = request.getSession();
-            HashMap<PlantDTO, Integer> cart
-                    = (HashMap<PlantDTO, Integer>) session.getAttribute("CART");
-
-            // getplant
+            // call dao
             PlantDAO dao = PlantDAO.getDao();
             PlantDTO plant = dao.getPlant(plantID);
-
             if (plant == null) {
                 return;
             }
-            
-//            // handler url
-//            String lastUrl = (String) session.getAttribute("lastUrl");
-//            if (lastUrl != null) {
-//                url = lastUrl;
-//            }
 
-            // total amount of cart
-            Integer total = (Integer) session.getAttribute("TOTAL");
-            if (total == null) {
-                total = 0;
-            }
+            request.setAttribute("PLANT", plant);
+            url = PLANT_PAGE_URL;
+        } catch (NamingException ex) {
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (NumberFormatException ex) {
 
-            // session timeout or user checkout
-            if (cart == null) {
-                cart = new HashMap<>();
-                cart.put(plant, 1);
-            } else {
-                // check plant is exist in cart or not
-                for (PlantDTO currentPlant : cart.keySet()) {
-                    if (currentPlant.getId() == plantID) {
-                        plant = currentPlant;
-                        break;
-                    }
-                }
-                Integer quantity = cart.get(plant);
-                if (quantity == null) {
-                    cart.put(plant, 1);
-                } else {
-                    cart.put(plant, ++quantity);
-                }
-            }
-            total += plant.getPrice();
-
-            session.setAttribute("CART", cart);
-            session.setAttribute("TOTAL", total);            
-        } catch (NamingException | SQLException | NumberFormatException ex) {
         } finally {
-//            response.sendRedirect(url);
+            if (url == INDEX_PAGE_URL) {
+                response.sendRedirect(url);
+            } else {
+                request.getRequestDispatcher(url).forward(request, response);
+            }
         }
     }
 
