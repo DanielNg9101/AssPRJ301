@@ -5,6 +5,7 @@
  */
 package dacnt.controller;
 
+import dacnt.utils.SendMail;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -32,21 +33,14 @@ public class SendOTP extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SendOTP</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SendOTP at " + request.getContextPath() + "</h1>");
-            String email = (String) request.getAttribute("email_newAccount");
-            out.println("<p>please check your email: " + email + ", a confirm code is sent to you.</p>");
-            out.println("<a href=\"index.jsp\">click here to go to index page</a>");
-            
-            request.getRequestDispatcher("ContactServlet").include(request, response);
-            
-            out.println("</body>");
-            out.println("</html>");
+            String to = (String) request.getAttribute("email_newAccount");
+            String subject = "Sign Up Successfully";
+            String message = "Welcome to our PlantShop";
+            String user = "vohuong0309@gmail.com";
+            String pass = "dTn01206730161";
+            SendMail.send(to, subject, message, user, pass);
+            request.setAttribute("WARNING", "Sign Up Successfully");
+            request.getRequestDispatcher("SearchServlet").forward(request, response);
         }
     }
 

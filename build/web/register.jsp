@@ -23,14 +23,14 @@
                         <td> <input type="text" 
                                     name="txtEmail" 
                                     required="" 
-                                    value="${requestScope.txtEmail}"
+                                    value="${param.txtEmail}"
                                     pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/> 
                     </tr>
                     <tr>
                         <td>full name</td>
                         <td> <input type="text" 
                                     name="txtFullname" 
-                                    value="${requestScope.txtFullname}"
+                                    value="${param.txtFullname}"
                                     required=""/> </td>
                     </tr>
                     <tr>
@@ -43,7 +43,7 @@
                         <td>phone</td>
                         <td> <input type="text" 
                                     name="txtPhone"
-                                    value="${requestScope.txtPhone}"
+                                    value="${param.txtPhone}"
                                     required=""/> <br/>
                             ${requestScope.ERROR}
                         </td>

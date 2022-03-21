@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RegisterServlet extends HttpServlet {
 
-    private final String ERROR_PAGE = "errorpage.jsp";
     private final String REGISTER_PAGE = "register.jsp";
 
     /**
@@ -44,13 +43,9 @@ public class RegisterServlet extends HttpServlet {
             String fullname = request.getParameter("txtFullname");
             String password = request.getParameter("txtPassword");
             String phone = request.getParameter("txtPhone");
-           
+
             if (phone.matches("^.*[a-zA-Z]+.*$")) {
 //                System.out.println(phone);
-
-                request.setAttribute("txtEmail", email);
-                request.setAttribute("txtFullname", fullname);
-                request.setAttribute("txtPhone", phone);
                 request.setAttribute("ERROR", "the phone is invalid");
                 request.getRequestDispatcher(REGISTER_PAGE)
                         .forward(request, response);
@@ -62,16 +57,19 @@ public class RegisterServlet extends HttpServlet {
 
             AccountDTO account = AccountDAO.getAccountByEmail(email);
             if (account != null) {
-                response.sendRedirect(ERROR_PAGE);
+                request.setAttribute("ERROR", "Account has existed!");
+                request.getRequestDispatcher(REGISTER_PAGE)
+                        .forward(request, response);
                 return;
             } // account does not exist in dbs
 
             if (AccountDAO.insertAccount(email, password, fullname, phone, status, role)) {
-//                url = INDEX_PAGE;
                 request.setAttribute("email_newAccount", email);
                 request.getRequestDispatcher("SendOTP").forward(request, response);
             } else {
-                response.sendRedirect(ERROR_PAGE);
+                request.setAttribute("ERROR", "Error occurred");
+                request.getRequestDispatcher(REGISTER_PAGE)
+                        .forward(request, response);
             }
         } catch (SQLException | NamingException ex) {
             ex.printStackTrace();
