@@ -4,7 +4,7 @@ use PlantShop
 GO
 
 ALTER TABLE Plants
-ALTER COLUMN [imgPath] varchar(150)
+ALTER COLUMN [imgPath] varchar(300)
 
 create table Accounts(
  accID int identity(1,1)primary key,
@@ -155,7 +155,10 @@ and [OrdDate] between '2021-01-11' and '2022-02-18'
 insert into Plants([PName], [price], [imgPath], [description], [status], [CateID])
 values ('Songoku', 2000, 'https://th.bing.com/th/id/R.9e2e832cf4bc2309470afab3f07c139c?rik=e4f2RNnU9fQEUw&pid=ImgRaw&r=0', 'songoku', 1, 2)
 
-
+SELECT *
+FROM [dbo].[Categories]
+WHERE CateID NOT IN (SELECT CateID
+					 FROM [dbo].[Plants])
 
 
 

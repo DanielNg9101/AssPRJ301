@@ -34,8 +34,8 @@
                 </tr>
             </thead>
             <tbody>
-                <c:if test="${not empty requestScope.CATEGORIES}">
-                    <c:forEach var="cate" items="${requestScope.CATEGORIES}">
+                <c:if test="${not empty requestScope.CATEGORIES.keySet()}">
+                    <c:forEach var="cate" items="${requestScope.CATEGORIES.keySet()}">
                         <tr>
                             <th>${cate.cateID}</th>
                             <th> 
@@ -55,10 +55,12 @@
 
                             </th>
                             <th>
-                                <a href="deleteCategory?cateId=${cate.cateID}"
-                                   onclick="return deleteCategory();">
-                                    Delete
-                                </a>
+                                <c:if test="${not requestScope.CATEGORIES.get(cate)}">
+                                    <a href="deleteCategory?cateId=${cate.cateID}"
+                                       onclick="return deleteCategory();">
+                                        Delete
+                                    </a>
+                                </c:if>
                             </th>
                         </tr>
 

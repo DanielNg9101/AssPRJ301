@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.NamingException;
@@ -43,7 +44,7 @@ public class ManageCategoriesServlet extends HttpServlet {
         try {
             CategoryDAO dao = CategoryDAO.getInstance();
             dao.getCategories();
-            ArrayList<CategoryDTO> categories = dao.getCategoriesList();
+            HashMap<CategoryDTO, Boolean> categories = dao.getCategoriesList();
             if (categories != null) {
                 request.setAttribute("CATEGORIES", categories);
             }

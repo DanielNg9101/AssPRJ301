@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.naming.NamingException;
 
 /**
@@ -33,9 +34,14 @@ public class CategoryDAO {
     // [GET ALL CATEGORY]
     // [in]: 
     // [out]: categories
-    private ArrayList<CategoryDTO> categoriesList;
+//    private ArrayList<CategoryDTO> categoriesList;
+//
+//    public ArrayList<CategoryDTO> getCategoriesList() {
+//        return categoriesList;
+//    }
+    private HashMap<CategoryDTO, Boolean> categoriesList;
 
-    public ArrayList<CategoryDTO> getCategoriesList() {
+    public HashMap<CategoryDTO, Boolean> getCategoriesList() {
         return categoriesList;
     }
 
@@ -60,16 +66,27 @@ public class CategoryDAO {
                 rs = stm.executeQuery(sql);
 
                 // process
+//                if (this.categoriesList == null) {
+//                    this.categoriesList = new ArrayList<>();
+//                } else {
+//                    this.categoriesList.removeAll(this.categoriesList);
+//                }
                 if (this.categoriesList == null) {
-                    this.categoriesList = new ArrayList<>();
+                    this.categoriesList = new HashMap<>();
                 } else {
-                    this.categoriesList.removeAll(this.categoriesList);
+                    this.categoriesList.clear();
                 }
 
                 while (rs.next()) {
                     int cateId = rs.getInt("CateID");
                     String cateName = rs.getString("CateName");
-                    this.categoriesList.add(new CategoryDTO(cateId, cateName));
+                    if (isUsed(cateId)) {
+                        this.categoriesList.put(
+                                new CategoryDTO(cateId, cateName), true);
+                    } else {
+                        this.categoriesList.put(
+                                new CategoryDTO(cateId, cateName), false);
+                    }
                 }
             }
 
@@ -84,6 +101,50 @@ public class CategoryDAO {
                 con.close();
             }
         }
+    }
+
+    public boolean isUsed(int cateId)
+            throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        boolean result = true;
+        try {
+            // 1. connect
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                // 2. query
+                String sql = "SELECT CateID, CateName\n"
+                        + "FROM [dbo].[Categories]\n"
+                        + "WHERE CateID NOT IN (SELECT CateID\n"
+                        + "                     FROM [dbo].[Plants])\n"
+                        + "AND CateID = ?";
+
+                // 3. create statement
+                stm = con.prepareStatement(sql);
+                stm.setInt(1, cateId);
+
+                // 4. execute
+                rs = stm.executeQuery();
+
+                // process
+                if (rs.next()) {
+                    result = false;
+                }
+            }
+
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return result;
     }
 
     // [POST]

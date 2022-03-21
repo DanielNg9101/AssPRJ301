@@ -77,8 +77,8 @@
                         <td>Category</td>
                         <td> 
                             <select name="txtCategory">
-                                <c:if test="${not empty requestScope.CATEGORIES}">
-                                    <c:forEach var="cate" items="${requestScope.CATEGORIES}">
+                                <c:if test="${not empty requestScope.CATEGORIES.keySet()}">
+                                    <c:forEach var="cate" items="${requestScope.CATEGORIES.keySet()}">
                                         <option value="${cate.cateID}"
                                                 ${plant.cateid eq i ? "selected" : ""}>
                                             ${cate.cateName}

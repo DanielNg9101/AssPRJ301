@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -57,7 +58,7 @@ public class RenderEditPlantServlet extends HttpServlet {
             }
             CategoryDAO cDao = CategoryDAO.getInstance();
             cDao.getCategories();
-            ArrayList<CategoryDTO> categories = cDao.getCategoriesList();
+            HashMap<CategoryDTO, Boolean> categories = cDao.getCategoriesList();
             if (categories != null) {
                 request.setAttribute("CATEGORIES", categories);
             }
