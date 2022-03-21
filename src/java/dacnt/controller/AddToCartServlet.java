@@ -61,18 +61,12 @@ public class AddToCartServlet extends HttpServlet {
                     = (HashMap<PlantDTO, Integer>) session.getAttribute("CART");
 
             // getplant
-            PlantDAO dao = PlantDAO.getDao();
+            PlantDAO dao = PlantDAO.getInstance();
             PlantDTO plant = dao.getPlant(plantID);
 
             if (plant == null) {
                 return;
             }
-            
-//            // handler url
-//            String lastUrl = (String) session.getAttribute("lastUrl");
-//            if (lastUrl != null) {
-//                url = lastUrl;
-//            }
 
             // total amount of cart
             Integer total = (Integer) session.getAttribute("TOTAL");

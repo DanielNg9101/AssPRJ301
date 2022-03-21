@@ -18,7 +18,7 @@
         <title>View Cart</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
 
-        <script src="scripts/procesingCart.js"></script>
+        <script src="scripts/processingCart.js"></script>
 
     </head>
     <body>

@@ -7,6 +7,8 @@
 <%@page import="dacnt.plant.PlantDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,28 +18,25 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('.addToCartLink').click(function (e) {
-                    e.preventDefault();
-                    // console.log(e.target.search)
-                    const reconform = confirm("Add to cart?");
-                    if (reconform) {
-                        const plantID = e.target.search.split("=")[1]
-                        console.log(plantID)
-                        axios.get('addToCart?plantID=' + plantID)
-                    }
-                });
-            });
-        </script> 
+        <script src="scripts/addToCart.js"></script>
+
 
     </head>
     <body>
-        <%@include file="header.jsp" %>
+        <c:choose>
+            <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                <c:import url="header_loginedAdmin.jsp"/>
+            </c:when>
+            <c:otherwise>
+                <c:import url="header.jsp"/>
+            </c:otherwise>
+        </c:choose>
+
         <jsp:useBean id="PLANT" 
                      class="dacnt.plant.PlantDTO" 
                      scope="request" 
                      type="dacnt.plant.PlantDTO"/>
+        <c:set var="status" value="${fn:split('out of stock, available', ',')}" />
 
         <!--Using EL-->
         <section>
@@ -52,30 +51,27 @@
                     </td>
                     <td> Product Name: ${PLANT.name} </td>
                     <td> Price: ${PLANT.price} </td>
-                    <td> Status: ${PLANT.status} </td>
+                    <td> Status: ${ status[PLANT.status]} </td>
                     <td> Category: ${PLANT.catename} </td>
 
                     <td> 
-                        <a href="addToCart?plantID=${PLANT.id}"
-                           class="addToCartLink">
-                            add to cart
-                        </a> 
-                    </td>
-                    <%--
-                                        <td> 
-                                            <a href="AdminController?action=editPlant&plantID=<%= PLANT.getId()%>">
-                                                Edit
-                                            </a> 
-                                        </td>
-                    --%>
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                                <a href="renderEditPlant?plantID=${PLANT.id}"
+                                   onclick="return editPlant();">
+                                    edit
+                                </a> 
+                            </c:when>
+                            <c:otherwise>
+                                <a href="addToCart?plantID=${PLANT.id}"
+                                   class="addToCartLink">
+                                    add to cart
+                                </a> 
+                            </c:otherwise>
+                        </c:choose>
+
                 </tr>
             </table>
-
-            <%
-                session.setAttribute("lastUrl",
-                        "DispatchController?action=viewPlant&plantID=" + PLANT.getId());
-            %>
-
         </section>
         <%@include file="footer.jsp" %>
     </body>

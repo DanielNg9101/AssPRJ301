@@ -44,7 +44,7 @@ public class ViewPlantServlet extends HttpServlet {
             int plantID = Integer.parseInt(request.getParameter("plantID"));
 
             // call dao
-            PlantDAO dao = PlantDAO.getDao();
+            PlantDAO dao = PlantDAO.getInstance();
             PlantDTO plant = dao.getPlant(plantID);
             if (plant == null) {
                 return;

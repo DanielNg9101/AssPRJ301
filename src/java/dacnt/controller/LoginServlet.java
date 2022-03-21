@@ -27,7 +27,7 @@ import javax.servlet.http.HttpSession;
 public class LoginServlet extends HttpServlet {
     
     private final String LOGIN_PAGE = "login.jsp";
-    private final String ADMIN_CONTROLLER = "AdminController";
+    private final String ADMIN_PAGE = "admin.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -75,9 +75,8 @@ public class LoginServlet extends HttpServlet {
                     // [ADMIN]
                     if (acc.getRole() == 1) {
                         // redirect to admin home page
-                        String urlRewriting = ADMIN_CONTROLLER + "?action=viewAccounts";
-                        url = urlRewriting;
-                        session.setAttribute("ADMIN", acc);
+                        url = ADMIN_PAGE;
+                        session.setAttribute("USER", acc);
                         
                     } else {
                         // [USER]
@@ -113,7 +112,7 @@ public class LoginServlet extends HttpServlet {
                             if (!email.equals(checkedUser.getEmail())) {
                                 // delete token
                                 Cookie storeToken = new Cookie("TOKEN", "");
-                                storeToken.setMaxAge(0); // 30 mins
+                                storeToken.setMaxAge(0); // 30 remove cookie
                                 response.addCookie(storeToken);
                             }
                         } // if checkedUser == null ==> token doesn't exist ==> dothing
@@ -126,9 +125,8 @@ public class LoginServlet extends HttpServlet {
                     // [ADMIN]
                     if (acc.getRole() == 1) {
                         // redirect to admin home page
-                        String urlRewriting = ADMIN_CONTROLLER + "?action=viewAccounts";
-                        url = urlRewriting;
-                        session.setAttribute("ADMIN", acc);
+                        url = ADMIN_PAGE;
+                        session.setAttribute("USER", acc);
                         
                     } else {
                         // [USER]

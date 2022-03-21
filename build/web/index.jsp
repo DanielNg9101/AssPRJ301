@@ -20,33 +20,45 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('.addToCartLink').click(function (e) {
-                    e.preventDefault();
-                    // console.log(e.target.search)
-                    const reconform = confirm("Add to cart?");
-                    if (reconform) {
-                        const plantID = e.target.search.split("=")[1]
-                        console.log(plantID)
-                        axios.get('addToCart?plantID=' + plantID)
-                    }
-                });
-            });
-        </script> 
+        <script src="scripts/addToCart.js"></script>
 
     </head>
     <body>
-        <%@include file="header.jsp" %>
+
+        <c:choose>
+            <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                <c:import url="header_loginedAdmin.jsp"/>
+                <h1>Plants</h1>
+
+                <form action="search" method="POST" class="formsearch" >
+                    <input type="text" name="txtSearch" 
+                           value="${param.txtSearch}" />
+                    <select name="searchby">
+                        <option value="byname" 
+                                ${param.searchby.equals("byname") 
+                                  ? "selected" : "" }>
+                            by name
+                        </option>
+                        <option value="bycate"
+                                ${param.searchby.equals("bycate") 
+                                  ? "selected" : "" }>
+                            by category
+                        </option>
+                    </select>
+                    <button type="submit">search</button>
+                </form>
+                <h2><a href="viewAddPlant">Add plant</a> </h2>
+            </c:when>
+            <c:otherwise>
+                <c:import url="header.jsp"/>
+            </c:otherwise>
+        </c:choose>
+
+
         <c:if test="${not empty requestScope.WARNING}">
             <font style="color: red;"> ${requestScope.WARNING} </font>
         </c:if>
         <section>
-            <%
-                session.setAttribute("lastUrl", "DispatchController?action=index");
-
-            %> 
-
             <c:set var="PLANTS" value="${requestScope.PLANTS}"/>
             <c:if test="${not empty PLANTS}">
                 <c:set var="status" value="${fn:split('out of stock, available', ',')}" />
@@ -66,10 +78,20 @@
                             <td> Status: ${ status[plant.status]} </td>
                             <td> Category: ${plant.catename} </td>
                             <td> 
-                                <a href="addToCart?plantID=${plant.id}"
-                                   class="addToCartLink">
-                                    add to cart
-                                </a> 
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                                        <a href="renderEditPlant?plantID=${plant.id}"
+                                           onclick="return editPlant();">
+                                            edit
+                                        </a> 
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="addToCart?plantID=${plant.id}"
+                                           class="addToCartLink">
+                                            add to cart
+                                        </a> 
+                                    </c:otherwise>
+                                </c:choose>
                             </td>
                         </tr>
                     </table>

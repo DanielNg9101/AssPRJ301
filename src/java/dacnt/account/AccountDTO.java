@@ -5,11 +5,13 @@
  */
 package dacnt.account;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Daniel NG
  */
-public class AccountDTO {
+public class AccountDTO implements Serializable {
 
     private int accID;
     private String email;

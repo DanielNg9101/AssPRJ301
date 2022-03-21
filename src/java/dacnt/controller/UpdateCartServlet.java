@@ -48,7 +48,7 @@ public class UpdateCartServlet extends HttpServlet {
         try {
 //            System.out.println(plantID + " wejhehj " + newQuantity);
             
-            PlantDAO dao = PlantDAO.getDao();
+            PlantDAO dao = PlantDAO.getInstance();
             HttpSession session = request.getSession();
             HashMap<PlantDTO, Integer> cart
                     = (HashMap<PlantDTO, Integer>) session.getAttribute("CART");

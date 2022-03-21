@@ -23,10 +23,6 @@ public class PlantDAO implements Serializable {
     //[SINGLETON]
     private static PlantDAO dao = null;
 
-    public static PlantDAO getDao() {
-        return dao;
-    }
-
     public static PlantDAO getInstance() {
         if (dao == null) {
             dao = new PlantDAO();
@@ -43,7 +39,7 @@ public class PlantDAO implements Serializable {
     // [SEARCH]
     // [IN]: keyword, search by
     // [OUT]: list
-    public void searchPlants(String keyword, String searchby)
+    public void searchPlantsAdmin(String keyword, String searchby)
             throws NamingException, SQLException {
 
         Connection con = null;
@@ -105,6 +101,71 @@ public class PlantDAO implements Serializable {
         }
     }
 
+        // [SEARCH]
+    // [IN]: keyword, search by
+    // [OUT]: list
+    public void searchPlants(String keyword, String searchby)
+            throws NamingException, SQLException {
+
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        if (this.plants == null) {
+            this.plants = new ArrayList<>();
+        } else {
+            // create new dao after each seach so that, we don't need to remove all elements of last plants arr
+            this.plants.removeAll(plants);
+        }
+        try {
+            //1. make connection
+
+            con = DBUtils.makeConnection();
+//            System.out.println(con);
+            if (con != null && searchby != null) {
+                // 2. query string
+                String query = "Select PID, PName, price, imgPath, description, "
+                        + "status, Plants.CateID as 'CateID', CateName\n"
+                        + "From Plants join Categories on Plants.CateID = Categories.CateID\n";
+
+                if (searchby.equalsIgnoreCase("byname")) {
+                    query = query + "Where Plants.PName Like ? and status = 1";
+                } else {
+                    query = query + "Where CateName Like ? and status = 1";
+                }
+                // 3. create stm
+                stm = con.prepareStatement(query);
+                stm.setString(1, "%" + keyword + "%");
+
+                //4. execute query
+                rs = stm.executeQuery();
+
+                while (rs.next()) {
+                    int id = rs.getInt("PID");
+                    String name = rs.getString("PName");
+                    int price = rs.getInt("price");
+                    String imgPath = rs.getString("imgPath");
+                    String description = rs.getString("description");
+                    int status = rs.getInt("status");
+                    int cateid = rs.getInt("CateID");
+                    String catename = rs.getString("CateName");
+                    PlantDTO plant = new PlantDTO(id, name, price, imgPath, description, status, cateid, catename);
+                    this.plants.add(plant);
+
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+    
     // [GET]: single plant base on plant id
     // [IN]: plantid
     // [OUT]: plantdto
@@ -269,7 +330,8 @@ public class PlantDAO implements Serializable {
         try {
             con = DBUtils.makeConnection();
             if (con != null) {
-                String query = "Delete Plants\n"
+                String query = "Update Plants\n"
+                        + "Set status = 0"
                         + "Where PID = ?";
 
                 stm = con.prepareStatement(query);

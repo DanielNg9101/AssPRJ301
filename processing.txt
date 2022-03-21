@@ -18,12 +18,16 @@ personalPage.jsp
  - detail ==> done
  - searchbydate chưa làm ==> done
  - change profile + log lỗi ==> done
+ - shipdate chưa có ý tưởng
 
 error.jsp
  - chưa tạo trang lỗi chung
 
 plant.jsp
  - reconform chọn sản phẩm
+
+managecategory.jsp
+ - delete dính khóa ngoại crash app
 
 
 mapping:

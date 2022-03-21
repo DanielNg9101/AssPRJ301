@@ -5,6 +5,7 @@
  */
 package dacnt.controller;
 
+import dacnt.account.AccountDTO;
 import dacnt.plant.PlantDAO;
 import dacnt.plant.PlantDTO;
 import java.io.IOException;
@@ -46,11 +47,24 @@ public class SearchServlet extends HttpServlet {
             String searchby = request.getParameter("searchby");
             ArrayList<PlantDTO> list;
             PlantDAO dao = PlantDAO.getInstance();
-            if (keyword == null && searchby == null) {
-                // when the page is loaded, display all products
-                dao.searchPlants("", "");
+
+            HttpSession session = request.getSession();
+            AccountDTO user = (AccountDTO) session.getAttribute("USER");
+
+            if (user == null || user.getRole() == 0) {
+                if (keyword == null && searchby == null) {
+                    // when the page is loaded, display all products
+                    dao.searchPlants("", "");
+                } else {
+                    dao.searchPlants(keyword.toLowerCase(), searchby.toLowerCase());
+                }
             } else {
-                dao.searchPlants(keyword.toLowerCase(), searchby.toLowerCase());
+                if (keyword == null && searchby == null) {
+                    // when the page is loaded, display all products
+                    dao.searchPlantsAdmin("", "");
+                } else {
+                    dao.searchPlantsAdmin(keyword.toLowerCase(), searchby.toLowerCase());
+                }
             }
             // get list of plantdto
             list = dao.getPlants();
