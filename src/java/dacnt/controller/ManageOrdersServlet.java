@@ -5,24 +5,31 @@
  */
 package dacnt.controller;
 
+import dacnt.account.AccountDAO;
 import dacnt.account.AccountDTO;
 import dacnt.order.OrderDAO;
+import dacnt.order.OrderDTO;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
- * @author dacng
+ * @author Daniel NG
  */
-@WebServlet(name = "ChangeOrderStatusServlet", urlPatterns = {"/ChangeOrderStatusServlet"})
-public class ChangeOrderStatusServlet extends HttpServlet {
+public class ManageOrdersServlet extends HttpServlet {
+
+    private final String MANAGE_ORDER_PAGE = "manageOrders.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,52 +43,51 @@ public class ChangeOrderStatusServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        OrderDAO dao = OrderDAO.getInstance();
-        String url = "";
-//        System.out.println(urlRewriting);
+        String url = MANAGE_ORDER_PAGE;
         try {
-            HttpSession session = request.getSession();
-            AccountDTO account = (AccountDTO) session.getAttribute("USER");
+            String email = request.getParameter("userEmail");
+            OrderDAO dao = OrderDAO.getInstance();
+            String from = request.getParameter("from");
+            String to = request.getParameter("to");
 
-            if (account != null) {
-                if (account.getRole() == 0) {
-                    // handle last request
-                    String urlRewriting = "viewOrders?category=";
-                    String category = request.getParameter("category");
-                    urlRewriting += category;
-                    url = urlRewriting;
+            if (from == null || to == null || from.isEmpty() || to.isEmpty()) {
+                if (email == null || email.isEmpty() || email.equals("All User")) {
+                    dao.getOrders();
                 } else {
-                    url = "manageOrders";
-                    String userEmail = request.getParameter("userEmail");
-                    if (userEmail != null || !userEmail.isEmpty()) {
-                        url = url + "?userEmail=" + userEmail;
-                    }
-
+                    dao.getOrders(email);
                 }
+            } else {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date fromDate = new Date(df.parse(from).getTime());
+                Date toDate = new Date(df.parse(to).getTime());
+
+                if (email == null || email.isEmpty() || email.equals("All User")) {
+                    dao.getOrdersByDate(fromDate, toDate);
+                } else {
+                    dao.getOrdersByDate(email, fromDate, toDate);
+                }
+                request.setAttribute("fromDate", fromDate);
+                request.setAttribute("toDate", toDate);
             }
-            int orderID = Integer.parseInt(request.getParameter("orderID"));
 
-            String action = request.getParameter("action");
-            switch (action.trim()) {
-                case "cancelOrder":
-                    // call dao 1 -> 3
-                    dao.updateOrderStatus(orderID, "cancel");
-                    break;
+            ArrayList<OrderDTO> orders = dao.getOrdersList();
+            request.setAttribute("ORDERS", orders);
 
-                case "orderAgain":
-                    //call dao 3 -> 1
-                    dao.updateOrderStatus(orderID, "processing");
-                    break;
+//            System.out.println(orders);
+            ArrayList<AccountDTO> accounts = AccountDAO.getAccounts();
+            request.setAttribute("ACCOUNTS", accounts);
 
-            }
-        } catch (NamingException | SQLException | NumberFormatException ex) {
+            url = url + "?userEmail=" + email;
+
+        } catch (NamingException | SQLException | ParseException ex) {
+//        } catch (NamingException | SQLException ex) {
             ex.printStackTrace();
         } finally {
-            response.sendRedirect(url);
+            request.getRequestDispatcher(url).forward(request, response);
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

@@ -95,8 +95,8 @@ public class ViewOrdersServlet extends HttpServlet {
                 String from = request.getParameter("from");
                 String to = request.getParameter("to");
                 if (from.isEmpty() || to.isEmpty()) {
-                    String urlRewriting = "DispatchController?action=viewOrders&category=";
-                    url = urlRewriting;
+                    url = "viewOrders";
+                    return;
                 } else {
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     Date fromDate = new Date(df.parse(from).getTime());
@@ -115,7 +115,11 @@ public class ViewOrdersServlet extends HttpServlet {
         } catch (NamingException | SQLException | ParseException ex) {
             ex.printStackTrace();
         } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+            if (url.equals("viewOrders")) {
+                response.sendRedirect(url);
+            } else {
+                request.getRequestDispatcher(url).forward(request, response);
+            }
         }
     }
 

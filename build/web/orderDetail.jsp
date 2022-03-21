@@ -22,7 +22,14 @@
     </head>
     <body>
 
-        <%@include file="header.jsp" %>
+        <c:choose>
+            <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                <c:import url="header_loginedAdmin.jsp"/>
+            </c:when>
+            <c:otherwise>
+                <c:import url="header.jsp"/>
+            </c:otherwise>
+        </c:choose>
 
         <c:if test="${empty sessionScope.USER}">
             <%

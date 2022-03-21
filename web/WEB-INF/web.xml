@@ -84,6 +84,10 @@
         <servlet-name>ViewAddPlantServlet</servlet-name>
         <servlet-class>dacnt.controller.ViewAddPlantServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ManageOrdersServlet</servlet-name>
+        <servlet-class>dacnt.controller.ManageOrdersServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -155,6 +159,10 @@
     <servlet-mapping>
         <servlet-name>ViewAddPlantServlet</servlet-name>
         <url-pattern>/ViewAddPlantServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageOrdersServlet</servlet-name>
+        <url-pattern>/ManageOrdersServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

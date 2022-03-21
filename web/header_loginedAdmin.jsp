@@ -14,7 +14,7 @@
                         </a> 
                     </li>
                     <li> <a href="manageAccounts">Manage Accounts</a> </li>
-                    <li> <a href="">Manage Orders</a> </li>
+                    <li> <a href="manageOrders">Manage Orders</a> </li>
                     <li> <a href="search">Manage Plants</a> </li>
                     <li> <a href="manageCategories">Manage Categories</a> </li>
                     <li> Welcome ${sessionScope.USER.fullname} | <a href="logout">logout</a> </li>
