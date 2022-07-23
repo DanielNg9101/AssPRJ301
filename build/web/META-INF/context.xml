@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/FlowerManagementSystem">
     <Resource name="PlantDB" type="javax.sql.DataSource" auth="Container"
-    username="sa" password="2067"
-    driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-    url="jdbc:sqlserver://localhost:1433;databaseName=PlantShop" />
+              username="sa" password="2067"
+              driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+              url="jdbc:sqlserver://localhost:1433;databaseName=PlantShop" />
 </Context>

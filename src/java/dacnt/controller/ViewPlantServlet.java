@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ViewPlantServlet extends HttpServlet {
 
-    private final String INDEX_PAGE_URL = "DispatchController?action=index";
-    private final String PLANT_PAGE_URL = "DispatchController?action=viewPlantHandler";
+    private final String INDEX_PAGE_URL = "SearchServlet ";
+    private final String PLANT_PAGE_URL = "plant.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,7 +44,7 @@ public class ViewPlantServlet extends HttpServlet {
             int plantID = Integer.parseInt(request.getParameter("plantID"));
 
             // call dao
-            PlantDAO dao = PlantDAO.getDao();
+            PlantDAO dao = PlantDAO.getInstance();
             PlantDTO plant = dao.getPlant(plantID);
             if (plant == null) {
                 return;

@@ -5,9 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <body>
-        <p style="color: #006666; text-align: center;">Copyright &copy; 2021</p>
-    </body>
-</html>
+        <footer>
+            <p style="color: #006666; text-align: center;">Copyright &copy; 2021</p>
+        </footer>

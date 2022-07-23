@@ -27,7 +27,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "UpdateCartServlet", urlPatterns = {"/UpdateCartServlet"})
 public class UpdateCartServlet extends HttpServlet {
 
-    private final String VIEW_CART_PAGE_URL = "DispatchController?action=viewCart";
+    private final String VIEW_CART_PAGE_URL = "viewCart.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -45,34 +45,41 @@ public class UpdateCartServlet extends HttpServlet {
         String plantID = request.getParameter("plantID");
         String newQuantity = request.getParameter("quantity");
         String url = VIEW_CART_PAGE_URL;
-        PlantDAO dao = PlantDAO.getDao();
-        HttpSession session = request.getSession();
-        HashMap<PlantDTO, Integer> cart
-                = (HashMap<PlantDTO, Integer>) session.getAttribute("CART");
-        PlantDTO plant = null;
-        if (cart != null) {
-            // check plant is exist in cart or not
-            for (PlantDTO currentPlant : cart.keySet()) {
-                if (currentPlant.getId() == Integer.parseInt(plantID)) {
-                    plant = currentPlant;
-                    // System.out.println(newQuantity);
-                    cart.put(plant, Integer.parseInt(newQuantity));
-
-                    session.setAttribute("CART", cart);
-                    break;
-                }
-            }
-            if (plant != null) {
-                // update total
-                int total = 0;
+        try {
+//            System.out.println(plantID + " wejhehj " + newQuantity);
+            
+            PlantDAO dao = PlantDAO.getInstance();
+            HttpSession session = request.getSession();
+            HashMap<PlantDTO, Integer> cart
+                    = (HashMap<PlantDTO, Integer>) session.getAttribute("CART");
+            PlantDTO plant = null;
+            if (cart != null) {
+                // check plant is exist in cart or not
                 for (PlantDTO currentPlant : cart.keySet()) {
-                    total += currentPlant.getPrice() * cart.get(currentPlant);
-                }
-                session.setAttribute("TOTAL", total);
-            }
+                    if (currentPlant.getId() == Integer.parseInt(plantID)) {
+                        plant = currentPlant;
+                        // System.out.println(newQuantity);
+                        cart.put(plant, Integer.parseInt(newQuantity));
 
+                        session.setAttribute("CART", cart);
+                        break;
+                    }
+                }
+                if (plant != null) {
+                    // update total
+                    int total = 0;
+                    for (PlantDTO currentPlant : cart.keySet()) {
+                        total += currentPlant.getPrice() * cart.get(currentPlant);
+                    }
+                    session.setAttribute("TOTAL", total);
+                }
+
+            }
+        } catch (NumberFormatException ex) {
+            
+        } finally {
+            response.sendRedirect(url);
         }
-        response.sendRedirect(url);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

@@ -6,134 +6,110 @@
 
 <%@page import="dacnt.plant.PlantDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Edit Plant</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
-        <script>
-            function reconfirm() {
-                return confirm("Do you want to delete?");
-            }
-        </script>
+        <script src="scripts/processingPlant.js"></script>
     </head>
-    <body>
-        <header>
-            <%@include file="header.jsp" %>
-        </header>
-        <%
-            if (adminAcc == null || adminAcc.getRole() != 1) {
-        %>
-        <p style="color: red;"> you don't have permission. Click <a href="DispatchController">here</a> to back </p> 
-        <%
-        } else {
-            String name = adminAcc.getFullname();
-            PlantDTO editedPlant = (PlantDTO) request.getAttribute("EDITED_PLANT");
-            if (editedPlant != null) {
-                String[] status = {"out of stock", "available"};
-                String[] categories = {"", "orchild", "roses", "others"};
+    <body>        <!--<p style="color: red;"> you don't have permission. Click <a href="DispatchController">here</a> to back </p>--> 
 
-        %>
-        <section>
-            <%--<h3>Welcome <%= name%> come back </h3>--%>
-            <ct:welcome name="<%= name %>"/>
-        </section>
-        <form action="AdminController" method="POST">
-            <h1>Add Plant</h1>
-            <table>
-                <tr>
-                    <td>Plant Name</td>
-                    <td> <input type="text" 
-                                name="txtPlantName" 
-                                required=""
-                                value="<%= editedPlant.getName()%>"
-                                /> 
-                        <input type="hidden" 
-                               name="plantID" 
-                               value="<%= request.getParameter("plantID") %>" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>Price</td>
-                    <td> <input type="number" 
-                                name="txtPrice" 
-                                required="" 
-                                value="<%= editedPlant.getPrice()%>"
+        <c:import url="header_loginedAdmin.jsp"/>
+        <c:set var="status" value="${fn:split('out of stock, available', ',')}" />
 
-                                /> 
-                    </td>
+        <c:if test="${not empty requestScope.EDITED_PLANT}">
+            <c:set var="plant" value="${requestScope.EDITED_PLANT}"/>
+            <form action="editPlant" method="POST">
+                <h1>Edit Plant</h1>
+                <table>
+                    <tr>
+                        <td>Plant Name</td>
+                        <td> <input type="text" 
+                                    name="txtPlantName" 
+                                    required=""
+                                    value="${plant.name}"
+                                    /> 
+                            <input type="hidden" 
+                                   name="plantID" 
+                                   value="<%= request.getParameter("plantID")%>" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td> 
+                            <input type="number" 
+                                   name="txtPrice" 
+                                   required="" 
+                                   value="${plant.price}"
+                                   /> 
+                        </td>
 
-                </tr>
-                <tr>
-                    <td> Image Url </td>
-                    <td> <input type="text" 
-                                name="txtImg" 
-                                required="" 
-                                value="<%= editedPlant.getImgPath()%>"
+                    </tr>
+                    <tr>
+                        <td> Image Url </td>
+                        <td> <input type="text" 
+                                    name="txtImg" 
+                                    required="" 
+                                    value="${plant.imgPath}"
+                                    /> 
+                        </td>
 
-                                /> 
-                    </td>
+                    </tr>
+                    <tr>
+                        <td>Status</td>
+                        <td> 
+                            <select name="txtStatus">
+                                <c:forEach var="i" begin="0" 
+                                           end="${fn:length(status) - 1}">
+                                    <option value="${i}" 
+                                            ${plant.status eq i ? "selected" : ""}>
+                                        ${status[i]}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Category</td>
+                        <td> 
+                            <select name="txtCategory">
+                                <c:if test="${not empty requestScope.CATEGORIES.keySet()}">
+                                    <c:forEach var="cate" items="${requestScope.CATEGORIES.keySet()}">
+                                        <option value="${cate.cateID}"
+                                                ${plant.cateid eq i ? "selected" : ""}>
+                                            ${cate.cateName}
+                                        </option>
+                                    </c:forEach>
+                                </c:if>
+                            </select>
 
-                </tr>
-                <tr>
-                    <td>Status</td>
-                    <td> 
-                        <select name="txtStatus">
-                            <% for (int i = 0; i < status.length; i++) {%>
-                            <option value="<%= i%>" 
-                                    <%= editedPlant.getStatus() == i ? "selected" : ""%> >
-                                <%= status[i]%>
-                            </option>
-                            <%}%>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Category</td>
-                    <td> 
-                        <select name="txtCategory">
-                            <% for (int i = 1; i < categories.length; i++) {%>
-                            <option value="<%= i%>" 
-                                    <%= editedPlant.getCateid() == i ? "selected" : ""%> >
-                                <%= categories[i]%>
-                            </option>
-                            <%}%>
-                        </select>
+                        </td>
+                    </tr>
 
-                    </td>
-                </tr>
+                    <tr>
+                        <td> Description </td>
+                        <td> 
+                            <textarea name="txtDescription"
+                                      required="" > ${plant.description} </textarea>
+                        </td>
 
-                <tr>
-                    <td> Description </td>
-                    <td> 
-                        <textarea name="txtDescription"
-                                  required="" > <%= editedPlant.getDescription()%> </textarea>
-                    </td>
+                    </tr>
 
-                </tr>
-
-                <tr>
-                    <td colspan="2"> 
-                        <input type="hidden" name="doAction" value="editPlantHandler" />
-                        <input type="submit" value="editPlant" name="action" />
-                        <input type="submit" 
-                               value="deletePlant" 
-                               name="action"
-                               onclick="return reconfirm()" />  
-                    </td>
-                </tr>
-            </table>
+                    <tr>
+                        <td> <a href="" 
+                                onclick="return editPlant(this);">Edit</a> </td>
+                        <td> <a href="deletePlant?plantID=${plant.id}"
+                                onclick="return deletePlant()">Delete</a> </td>
+                    </tr>
+                </table>
 
 
-        </form>
-        <%} else { %>
-        <h1>Something went wrong</h1>
-        <%}%>
-
-        <%}%>
-        <footer>
-            <%@include file="footer.jsp" %>
-        </footer>
+            </form>
+        </c:if>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

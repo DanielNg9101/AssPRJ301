@@ -4,6 +4,7 @@
     Author     : Daniel NG
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,22 +15,10 @@
 
     </head>
     <body>
-        <header>
-            <%@include file="header.jsp" %>
-        </header>
-        <%
-            if (adminAcc == null || adminAcc.getRole() != 1) {
-        %>
-        <p style="color: red;"> you don't have permission. Click <a href="DispatchController">here</a> to back </p> 
-        <%
-        } else {
-            String name = adminAcc.getFullname();
-        %>
-        <section>
-            <%--<h3>Welcome <%= name%> come back </h3>--%>
-            <ct:welcome name="<%= name %>"/>
-        </section>
-        <form action="AdminController" method="POST">
+        <%@include file="header_loginedAdmin.jsp" %>
+
+
+        <form action="addPlant" method="POST">
             <h1>Add Plant</h1>
             <table>
                 <tr>
@@ -37,6 +26,7 @@
                     <td> <input type="text" 
                                 name="txtPlantName" 
                                 required="" 
+                                value="${param.txtPlantName}"
                                 /> 
                     </td>
                 </tr>
@@ -45,6 +35,7 @@
                     <td> <input type="number" 
                                 name="txtPrice" 
                                 required="" 
+                                value="${param.txtPrice}"
                                 /> 
                     </td>
 
@@ -54,6 +45,7 @@
                     <td> <input type="text" 
                                 name="txtImg" 
                                 required="" 
+                                value="${param.txtImg}"
                                 /> 
                     </td>
 
@@ -71,10 +63,15 @@
                     <td>Category</td>
                     <td> 
                         <select name="txtCategory">
-                            <option value="2"> roses </option>
-                            <option value="1"> orchild </option>
-                            <option value="3"> others </option>
+                            <c:if test="${not empty requestScope.CATEGORIES.keySet()}">
+                                <c:forEach var="cate" items="${requestScope.CATEGORIES.keySet()}">
+                                    <option value="${cate.cateID}">
+                                        ${cate.cateName}
+                                    </option>
+                                </c:forEach>
+                            </c:if>
                         </select>
+
                     </td>
                 </tr>
 
@@ -82,24 +79,19 @@
                     <td> Description </td>
                     <td> 
                         <textarea name="txtDescription"
-                                  required="" ></textarea>
+                                  required="" 
+                                  >${param.txtDescription}</textarea>
                     </td>
 
                 </tr>
 
                 <tr>
                     <td colspan="2"> 
-                        <input type="hidden" name="action" value="addPlantHandler" />
-                        <input type="submit" value="add" />
+                        <input type="submit" value="Add" />
                     </td>
                 </tr>
             </table>
-
-
         </form> 
-        <%}%>
-        <footer>
-            <%@include file="footer.jsp" %>
-        </footer>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

@@ -7,72 +7,36 @@
 <%@page import="dacnt.plant.PlantDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>index</title>
+        <title>Plant</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script src="scripts/addToCart.js"></script>
+
 
     </head>
     <body>
-        <header>
-            <%@include file="header.jsp" %>
-        </header>
-        <section>
-            <%//PlantDTO PLANT = (PlantDTO) request.getAttribute("PLANT"); %>
+        <c:choose>
+            <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                <c:import url="header_loginedAdmin.jsp"/>
+            </c:when>
+            <c:otherwise>
+                <c:import url="header.jsp"/>
+            </c:otherwise>
+        </c:choose>
 
-            <jsp:useBean id="PLANT" 
-                         class="dacnt.plant.PlantDTO" 
-                         scope="request" 
-                         type="dacnt.plant.PlantDTO"/>
-
-            <%
-//                PlantDTO PLANT = (PlantDTO) request.getAttribute("PLANT");
-                String[] tmp = {"out of stock", "available"};
-            %> 
-            <table class="product">
-                <tr>
-                    <td> 
-                        <img src="<jsp:getProperty name="PLANT" property="imgPath" />" 
-                             class ="plantimg" /> 
-                    </td>
-                    <td> Product ID: 
-                        <a href="DispatchController?action=viewPlant&plantID=<jsp:getProperty name="PLANT" property="id" />">
-                            <jsp:getProperty name="PLANT" property="id" />
-                        </a> 
-                    </td>
-                    <td> Product Name: 
-                        <jsp:getProperty name="PLANT" property="name" /> 
-                    </td>
-                    <td> Price: 
-                        <jsp:getProperty name="PLANT" property="price" />
-                    </td>
-                    <td> Status: 
-                        <jsp:getProperty name="PLANT" property="status" />
-                    </td>
-                    <td> Category: 
-                        <jsp:getProperty name="PLANT" property="catename" /> 
-                    </td>
-                    <%
-                        if (currentUser == null || currentUser.getRole() == 0) {
-                    %>
-                    <td> <a href="DispatchController?action=addToCart&plantID=<%= PLANT.getId()%>">add to cart</a> </td>
-                    <% } else {%>
-
-                    <td> <a href="AdminController?action=editPlant&plantID=<%= PLANT.getId()%>">Edit</a> </td>
-
-                    <%}%>
-                </tr>
-            </table>
-
-            <%
-                session.setAttribute("lastUrl",
-                        "DispatchController?action=viewPlant&plantID=" + PLANT.getId());
-            %>
-
-        </section>
-
+        <jsp:useBean id="PLANT" 
+                     class="dacnt.plant.PlantDTO" 
+                     scope="request" 
+                     type="dacnt.plant.PlantDTO"/>
+        <c:set var="status" value="${fn:split('out of stock, available', ',')}" />
 
         <!--Using EL-->
         <section>
@@ -81,42 +45,34 @@
                 <tr>
                     <td> <img src="${PLANT.imgPath}" class ="plantimg" /> </td>
                     <td> Product ID: 
-                        <a href="DispatchController?action=viewPlant&plantID=${PLANT.id}">
+                        <a href="viewPlant?plantID=${PLANT.id}">
                             ${PLANT.id}
                         </a> 
                     </td>
                     <td> Product Name: ${PLANT.name} </td>
                     <td> Price: ${PLANT.price} </td>
-                    <td> Status: ${PLANT.status} </td>
+                    <td> Status: ${ status[PLANT.status]} </td>
                     <td> Category: ${PLANT.catename} </td>
-                    <%
-                        if (currentUser == null || currentUser.getRole() == 0) {
-                    %>
-                    <td> 
-                        <a href="DispatchController?action=addToCart&plantID=<%= PLANT.getId()%>">
-                            add to cart
-                        </a> 
-                    </td>
-                    <% } else {%>
 
                     <td> 
-                        <a href="AdminController?action=editPlant&plantID=<%= PLANT.getId()%>">
-                            Edit
-                        </a> 
-                    </td>
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                                <a href="renderEditPlant?plantID=${PLANT.id}"
+                                   onclick="return editPlant();">
+                                    edit
+                                </a> 
+                            </c:when>
+                            <c:otherwise>
+                                <a href="addToCart?plantID=${PLANT.id}"
+                                   class="addToCartLink">
+                                    add to cart
+                                </a> 
+                            </c:otherwise>
+                        </c:choose>
 
-                    <%}%>
                 </tr>
             </table>
-
-            <%
-                session.setAttribute("lastUrl",
-                        "DispatchController?action=viewPlant&plantID=" + PLANT.getId());
-            %>
-
         </section>
-        <footer>
-            <%@include file="footer.jsp" %>
-        </footer>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

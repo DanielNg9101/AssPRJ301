@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LogoutServlet", urlPatterns = {"/LogoutServlet"})
 public class LogoutServlet extends HttpServlet {
 
-    private final String INDEX_PAGE_URL = "DispatchController?action=index";
+    private final String INDEX_PAGE_URL = "search";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,11 +42,7 @@ public class LogoutServlet extends HttpServlet {
                 return;
             } // end if session != null
 
-//            session.removeAttribute("NAME");
-//            session.removeAttribute("EMAIL");
-//            session.removeAttribute("PHONE");
-//            session.removeAttribute("CURRENT_USER");
-            session.invalidate();   // remoeve session to get new jsessionid
+            session.invalidate();   // remove session to get new jsessionid
         } finally {
             response.sendRedirect(url);
         }

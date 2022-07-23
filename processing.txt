@@ -1,74 +1,37 @@
-COMPLETE
+login.jsp
+ - sửa cơ chế log lỗi, warning của login cho giống với register ==> done
 
-PROCESSING
+register.jsp
+ - sửa sendotpservlet
 
+header.jsp
+ - cart chưa làm, link đã fix ==> done
 
------------------------------------------------------
+index.jsp
+ - sua co che thong qua seachservlet ==> DONE
+ - sau khi làm tính năng addplant thì  kiểm tra lại xem có search được plant tên có chữ hoa không
+ - reconform chon sản phẩm ==> done
 
-10/2/2022
-COMPLETE
-- đã fix lỗi show order
-- đã sửa tất cả các trang register, login phải thông qua dispatchercontroller
+personalPage.jsp
+ - viewcart  ==> done
+ - cancel, order again chua sua ==> done
+ - detail ==> done
+ - searchbydate chưa làm ==> done
+ - change profile + log lỗi ==> done
+ - shipdate chưa có ý tưởng
 
-PROCESSING
-- chưa làm order again và cancel order
-- add to cart chưa làm
-- register chưa check unique
-------------------------------------------------------
+error.jsp
+ - chưa tạo trang lỗi chung
 
-11/2/2022
-COMPLETE
-- fix registration, login
-- login không có username, password vẫn đăng nhập đc
+plant.jsp
+ - reconform chọn sản phẩm
 
-PROCESSING
-- chưa xử lý được đăng nhập 2 account thì tự động đăng nhập không đúng
-
------------------------------------------------------
-
-17/2/2022
-COMPLETE
-- sửa hashmap từ string sang plantdto để có thể hiện thêm nhiều thông tin ở viewcart
-- delete cart
-
-PROCESSING
+managecategory.jsp
+ - delete dính khóa ngoại crash app
 
 
-
------------------------------------------------------
-
-
-
+mapping:
+ viewOrders --> personalPage.jsp => chưa fix nếu người dùng nhập personalpage.jsp trên url thì nó ko qua servlet ==> fix ở filter
+ SearchServlet --> index.jsp => lỗi nhưng không biết fix như nào
 
 
-xóa sản phẩm: bạn có chắc muốn xóa ko
-
-checkout: nếu có tk thì cho check out, ko thì gửi modal và chuyển về trang login
-
-ko có tài khoản thì in form ra cho nhập, tự động tạo tk cho khách để có accountid đưa vào orderid
-
-con.setAutoCommit(false): tắt tính năng submit dữ liệu vào bảng vật lý của dbs
-
-
-- commit de luu vao bang vat ly
-con.commit(): 
-con.setAutoCommit(true); // set true lai de no luu transactinon
-
-
---- trang admin
-inacctivate/activate account (gui email cho tk thong bao no bi ban)
-them xoa sua plant
-view all plants
-crud account
-search account
-
-            HashMap<PlantDTO, Integer> cart      [position 50:13]
-
--- chưa fix admin edit profile
-
-
-=============
-sửa lại flow của data
-- khi deploy thì load hết sản phẩm có trong database vào trong 1 linkedlist chẳng hạn, 
-lưu trong initalized parameter, từ đó truy vấn hay làm gì chỉ làm trên cái list đó, không có gọi xuống dbs rồi new object (lâu)
-- khi update, delete thông tin sản phẩm thì load lại cái linkedlist này

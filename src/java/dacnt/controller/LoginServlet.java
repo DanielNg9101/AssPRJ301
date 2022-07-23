@@ -25,10 +25,9 @@ import javax.servlet.http.HttpSession;
  * @author Daniel NG
  */
 public class LoginServlet extends HttpServlet {
-
-    private final String WELCOME_PAGE = "welcome.html";
-    private final String INVALID_PAGE = "invalid.jsp";
-    private final String ADMIN_CONTROLLER = "AdminController";
+    
+    private final String LOGIN_PAGE = "login.jsp";
+    private final String ADMIN_PAGE = "admin.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -48,7 +47,7 @@ public class LoginServlet extends HttpServlet {
         AccountDTO acc = null;
         String token = "";
         String jsessionID = "";
-        String url = INVALID_PAGE;
+        String url = LOGIN_PAGE;
         try {
             // get jsession id
             Cookie[] cookies = request.getCookies();
@@ -58,7 +57,7 @@ public class LoginServlet extends HttpServlet {
                 } else if (cookies[i].getName().equals("TOKEN")) {
                     token = cookies[i].getValue();
                 }
-
+                
                 if (!token.isEmpty() && !jsessionID.isEmpty()) {
                     break;
                 }
@@ -76,20 +75,21 @@ public class LoginServlet extends HttpServlet {
                     // [ADMIN]
                     if (acc.getRole() == 1) {
                         // redirect to admin home page
-                        String urlRewriting = ADMIN_CONTROLLER + "?action=viewAccounts";
-                        url = urlRewriting;
-                        session.setAttribute("ADMIN", acc);
-
+                        url = ADMIN_PAGE;
+                        session.setAttribute("USER", acc);
+                        
                     } else {
                         // [USER]
                         // url rewriting forward to vieworderservlet
-                        String urlRewriting = "DispatchController?action=viewOrders&category=";
+                        String urlRewriting = "viewOrders";
                         url = urlRewriting;
-                        session.setAttribute("CURRENT_USER", acc);
-
+                        session.setAttribute("USER", acc);
+                        
                     }
+                } else {
+                    request.setAttribute("ERROR", "Incorrect username or password");
                 }
-
+                
             } else {
                 acc = AccountDAO.getAccount(email, password);
 
@@ -112,7 +112,7 @@ public class LoginServlet extends HttpServlet {
                             if (!email.equals(checkedUser.getEmail())) {
                                 // delete token
                                 Cookie storeToken = new Cookie("TOKEN", "");
-                                storeToken.setMaxAge(0); // 30 mins
+                                storeToken.setMaxAge(0); // 30 remove cookie
                                 response.addCookie(storeToken);
                             }
                         } // if checkedUser == null ==> token doesn't exist ==> dothing
@@ -125,20 +125,18 @@ public class LoginServlet extends HttpServlet {
                     // [ADMIN]
                     if (acc.getRole() == 1) {
                         // redirect to admin home page
-                        String urlRewriting = ADMIN_CONTROLLER + "?action=viewAccounts";
-                        url = urlRewriting;
-                        session.setAttribute("ADMIN", acc);
-
+                        url = ADMIN_PAGE;
+                        session.setAttribute("USER", acc);
+                        
                     } else {
                         // [USER]
                         // url rewriting forward to vieworderservlet
-                        String urlRewriting = "DispatchController?action=viewOrders&category=";
+                        String urlRewriting = "viewOrders";
                         url = urlRewriting;
-                        session.setAttribute("CURRENT_USER", acc);
-
-                        // redirect to welcome page
-//                    url = WELCOME_PAGE;
+                        session.setAttribute("USER", acc);
                     }
+                } else {
+                    request.setAttribute("ERROR", "Incorrect username or password");
                 }
             }
         } catch (SQLException ex) {
@@ -146,7 +144,11 @@ public class LoginServlet extends HttpServlet {
         } catch (NamingException ex) {
             ex.printStackTrace();
         } finally {
-            response.sendRedirect(url);
+            if (url != LOGIN_PAGE) {
+                response.sendRedirect(url);
+            } else {
+                request.getRequestDispatcher(url).forward(request, response);
+            }
         }
     }
 

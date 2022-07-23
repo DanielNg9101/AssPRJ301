@@ -9,44 +9,48 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>index</title>
+        <title>Login</title>
         <link rel="stylesheet" href="styles/mycss.css"/>
-
 
     </head>
     <body>
-        <header>
-            <%@include file="header.jsp" %>
-        </header>
-        <section>
 
-            <form action="DispatchController" method="POST" class="formlogin">
+        <%@include file="header.jsp" %>
+        <section>
+            <form action="login" method="POST" class="formlogin">
                 <h1>Login</h1>
-                <%
-                    String warning = (String) request.getAttribute("WARNING");
-                %> 
-                <font style="color: red;"> <%= warning == null ? "" : warning%> </font>
                 <table>
+                    <c:if test="${not empty requestScope.ERROR}">
+                        <tr>
+                            <td colspan="2">
+                                <p style="color: red;">${requestScope.ERROR}</p>
+                            </td>
+                        </tr>
+                    </c:if>
                     <tr>
                         <td>email</td>
-                        <td> <input type="text" name="txtEmail"/> </td>
+                        <td> <input type="text" 
+                                    name="txtEmail"
+                                    value="${param.txtEmail}"
+                                    /> </td>
                     </tr>
                     <tr>
                         <td>password</td>
                         <td> <input type="password" name="txtPassword"/> </td>
                     </tr>
                     <tr>
-                        <td colspan="2"> <input type="checkbox" name="remember" value="remembered" /> Remember me </td>
+                        <td colspan="2"> 
+                            <input type="checkbox" name="remember" value="remembered" /> 
+                            Remember me 
+                        </td>
                     </tr>
                     <tr>
-                        <td colspan="2"> <input type="submit" value="login" name="action" /> </td>
+                        <td colspan="2"> <button type="submit">login</button></td>
                     </tr>
                 </table>
             </form>
-
         </section>
-        <footer>
-            <%@include file="footer.jsp" %>
-        </footer>
+
+        <%@include file="footer.jsp" %>
     </body>
 </html>

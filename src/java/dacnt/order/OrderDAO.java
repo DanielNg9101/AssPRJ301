@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -64,6 +65,56 @@ public class OrderDAO implements Serializable {
                 stm.setString(1, email);
                 // execute
                 rs = stm.executeQuery();
+
+                // process arraylist
+                if (this.ordersList == null) {
+                    this.ordersList = new ArrayList<>();
+                } else {
+                    this.ordersList.removeAll(this.ordersList);
+                }
+
+                // process
+                while (rs.next()) {
+                    int orderID = rs.getInt("OrderID");
+                    String orderDate = rs.getString("OrdDate");
+                    String shipDate = rs.getString("shipdate");
+                    int status = rs.getInt("status");
+                    int accID = rs.getInt("AccID");
+                    OrderDTO dto = new OrderDTO(orderID, orderDate, shipDate, status, accID);
+                    this.ordersList.add(dto);
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+
+    public void getOrders()
+            throws NamingException, SQLException {
+        Connection con = null;
+        Statement stm = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                // make query
+                String query = "Select OrderID, OrdDate, shipdate, status, AccID\n"
+                        + "From Orders \n";
+
+                // make stm
+                stm = con.createStatement();
+
+                // execute
+                rs = stm.executeQuery(query);
 
                 // process arraylist
                 if (this.ordersList == null) {
@@ -189,7 +240,63 @@ public class OrderDAO implements Serializable {
                 stm.setString(1, email);
                 stm.setDate(2, from);
                 stm.setDate(3, to);
-                
+
+                // execute
+                rs = stm.executeQuery();
+
+//                System.out.println(query);
+                // process arraylist
+                if (this.ordersList == null) {
+                    this.ordersList = new ArrayList<>();
+                } else {
+                    this.ordersList.removeAll(this.ordersList);
+                }
+
+                // process
+                while (rs.next()) {
+                    int orderID = rs.getInt("OrderID");
+                    String orderDate = rs.getString("OrdDate");
+                    String shipDate = rs.getString("shipdate");
+                    int status = rs.getInt("status");
+                    int accID = rs.getInt("AccID");
+                    OrderDTO dto = new OrderDTO(orderID, orderDate, shipDate, status, accID);
+                    this.ordersList.add(dto);
+                }
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+    // [GET} - get all order by date
+    // {IN]: from, to
+    // [OUT]: void
+    public void getOrdersByDate(Date from, Date to)
+            throws NamingException, SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            con = DBUtils.makeConnection();
+            if (con != null) {
+                // make query
+                String query = "Select OrderID, OrdDate, shipdate, status,AccID\n"
+                        + "From Orders \n"
+                        + "Where OrdDate between ? and ?";
+
+                // make stm
+                stm = con.prepareStatement(query);
+                stm.setDate(1, from);
+                stm.setDate(2, to);
+
                 // execute
                 rs = stm.executeQuery();
 

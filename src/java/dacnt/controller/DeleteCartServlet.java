@@ -23,7 +23,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "DeleteCartServlet", urlPatterns = {"/DeleteCartServlet"})
 public class DeleteCartServlet extends HttpServlet {
 
-    private final String VIEW_CART_PAGE_URL = "DispatchController?action=viewCart";
+    private final String VIEW_CART_PAGE_URL = "viewCart.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

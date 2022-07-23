@@ -27,9 +27,9 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ChangeProfileServlet", urlPatterns = {"/ChangeProfileServlet"})
 public class ChangeProfileServlet extends HttpServlet {
 
-    private final String PERSONAL_PAGE_URL = "DispatchController?action=personalPage";
-    private final String CHANGE_PROFILE_PAGE_URL = "DispatchController?action=changeProfileHandler";
-    private final String LOGIN_PAGE_URL = "DispatchController?action=loginHandler";
+    private final String PERSONAL_PAGE_URL = "personalPage.jsp";
+    private final String CHANGE_PROFILE_PAGE_URL = "changeProfile.jsp";
+    private final String LOGIN_PAGE_URL = "login.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -52,6 +52,17 @@ public class ChangeProfileServlet extends HttpServlet {
         try {
             if (newName.trim().isEmpty() || newPhone.trim().isEmpty()) {
                 url = CHANGE_PROFILE_PAGE_URL;
+                request.setAttribute("ERROR", "Invalid information");
+                request.getRequestDispatcher(url)
+                        .forward(request, response);
+                return;
+            }
+
+            if (newPhone.matches("^.*[a-zA-Z]+.*$")) {
+                url = CHANGE_PROFILE_PAGE_URL;
+                request.setAttribute("ERROR", "The phone is invalid");
+                request.getRequestDispatcher(url)
+                        .forward(request, response);
                 return;
             }
 
@@ -61,30 +72,31 @@ public class ChangeProfileServlet extends HttpServlet {
             if (session == null) {
                 return;
             } // end if session != null
-            
+
             // session has time but user log out ==> cannot update
-            AccountDTO currentUser = (AccountDTO) session.getAttribute("CURRENT_USER");
+            AccountDTO currentUser = (AccountDTO) session.getAttribute("USER");
             if (currentUser == null) {
                 return;
             } // end if user != null
 
-            boolean result = AccountDAO.updateAccount(email, currentUser.getPassword(), newName, newPhone);
+            boolean result
+                    = AccountDAO.updateAccount(email, currentUser.getPassword(),
+                            newName, newPhone);
 
             if (result) {
                 currentUser.setFullname(newName);
                 currentUser.setPhone(newPhone);
-                
-                session.setAttribute("CURRENT_USER", currentUser);
 
-                String urlRewriting = "DispatchController?action=viewOrders&category=";
+                session.setAttribute("USER", currentUser);
+
+                String urlRewriting = "viewOrders";
                 url = urlRewriting;
+                response.sendRedirect(url);
+
             }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (NamingException ex) {
+        } catch (SQLException | NamingException ex) {
             ex.printStackTrace();
         } finally {
-            response.sendRedirect(url);
         }
     }
 

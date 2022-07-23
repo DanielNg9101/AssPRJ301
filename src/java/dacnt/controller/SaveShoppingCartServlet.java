@@ -12,11 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,11 +23,10 @@ import javax.servlet.http.HttpSession;
  *
  * @author Daniel NG
  */
-@WebServlet(name = "SaveShoppingCartServlet", urlPatterns = {"/SaveShoppingCartServlet"})
 public class SaveShoppingCartServlet extends HttpServlet {
 
-    private final String INDEX_PAGE_URL = "DispatchController?action=index";
-    private final String VIEW_CART_PAGE_URL = "DispatchController?action=viewCart";
+    private final String INDEX_PAGE_URL = "SearchServlet";
+    private final String VIEW_CART_PAGE_URL = "viewCart.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,7 +40,7 @@ public class SaveShoppingCartServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String url = INDEX_PAGE_URL;
+        String url = VIEW_CART_PAGE_URL;
         String warning = "";
 
         try {
@@ -52,41 +48,37 @@ public class SaveShoppingCartServlet extends HttpServlet {
             if (session != null) {
                 // check log in time out
                 AccountDTO currentUser
-                        = (AccountDTO) session.getAttribute("CURRENT_USER");
+                        = (AccountDTO) session.getAttribute("USER");
                 HashMap<PlantDTO, Integer> cart
                         = (HashMap<PlantDTO, Integer>) session.getAttribute("CART");
                 if (cart == null || cart.isEmpty()) {
-                    warning = "your cart is empty";
+                    warning = "Your cart is empty";
                 } else {
                     if (currentUser == null) {
-                        warning = "you must login to finish the shopping";
+                        warning = "You must login to finish the shopping";
                     } else {
                         OrderDAO dao = OrderDAO.getInstance();
                         boolean result = dao.insertOrder(currentUser.getEmail(), cart);
                         if (result) {
                             // insert successfully
                             session.setAttribute("CART", null);
-                            warning = "save your cart sucessfully";
+                            session.setAttribute("TOTAL", 0);
+                            warning = "Save your cart sucessfully";
+                            url = INDEX_PAGE_URL;
                         } else {
-                            warning = "these products are out of stock";
+                            warning = "These products are out of stock";
                         }
                     }
                 }
-                url = VIEW_CART_PAGE_URL;
                 request.setAttribute("WARNING", warning);
             }
 
-        } catch (NamingException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
+        } catch (NamingException | SQLException ex) {
             ex.printStackTrace();
         } finally {
-            if (url == INDEX_PAGE_URL) {
-                response.sendRedirect(url);
-            } else {
-                request.getRequestDispatcher(url).forward(request, response);
-            }
+            request.getRequestDispatcher(url).forward(request, response);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

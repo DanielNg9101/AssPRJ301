@@ -9,6 +9,8 @@
 <%@page import="dacnt.order.OrderDetailDTO"%>
 <%@page import="dacnt.order.OrderDAO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -20,75 +22,63 @@
     </head>
     <body>
 
-        <header>
-            <%@include file="header.jsp" %>
-        </header>
-        <%
-            if (currentUser == null) {
-        %> 
-        <p style="color: red;"> you must <a href="login.jsp">login</a> to view personal page </p>  
-        <%
-        } else {
-            String name = currentUser.getFullname();
-        %>
-        <section>
-            <%--<h3>Welcome <%= name%> come back </h3>--%>
-            <ct:welcome name="<%= name %>"/>
-            <h3><a href="DispatchController?action=logout">Logout</a></h3>
-        </section>
-        <section>
-            <!--load all orders of user at here-->
-            <%
-                String orderid = request.getParameter("orderid");
-                if (orderid != null) {
-                    int orderID = Integer.parseInt(orderid);
-                    OrderDAO dao = OrderDAO.getInstance();
-                    dao.getOrderDetail(orderID);
-                    ArrayList<OrderDetailDTO> list = dao.getOrderDetailList();
-                    if (list != null && !list.isEmpty()) {
-                        int money = 0;
-                        for (OrderDetailDTO dto : list) {
-            %>
-            <table class="order">
-                <tr>
-                    <td>Order ID</td>
-                    <td>Plant ID</td>
-                    <td>Plant Name</td>
-                    <td>Image</td>
-                    <td>Quantity</td>
-                </tr>
-                <tr>
-                    <td><%= dto.getOrderDetailID()%></td>
-                    <td><%= dto.getPlantID()%></td>
-                    <td><%= dto.getPlantName()%></td>
-                    <td> <img src="<%= dto.getImgPath()%>" class="plantimg" />
-                        <br/>
-                        <%= dto.getPrice()%>
-                    </td>
-                    <td> <%= dto.getQuantity()%> </td>
-                    <% money = money + dto.getPrice() * dto.getQuantity(); %>
-                </tr>
-            </table>
+        <c:choose>
+            <c:when test="${not empty sessionScope.USER and sessionScope.USER.role eq 1}">
+                <c:import url="header_loginedAdmin.jsp"/>
+            </c:when>
+            <c:otherwise>
+                <c:import url="header.jsp"/>
+            </c:otherwise>
+        </c:choose>
 
+        <c:if test="${empty sessionScope.USER}">
             <%
-                } // end for
-            %> 
-            <h3> Total money: <%= money%> </h3>
-            <%
-            } else {
-            %> 
-            <p>You don't have any order</p>
-            <%
-                    }
-                }
+                request.setAttribute("ERROR",
+                        "You must login to view order detail");
+                request.getRequestDispatcher("login.jsp")
+                        .forward(request, response);
             %>
-        </section>
+        </c:if>
 
-        <%
-            }
-        %>
-        <footer>
-            <%@include file="footer.jsp" %>
-        </footer>
+        <c:if test="${not empty sessionScope.USER}">
+            <section>
+                <ct:welcome name="${sessionScope.USER.fullname}"/>
+                <h3><a href="logout">Logout</a></h3>
+            </section>
+            <section>
+                <!--load all orders of user at here-->
+                <c:set var="DETAILS" value="${requestScope.DETAILS}" />
+                <c:if test="${empty DETAILS}">
+                    <p>You don't have any order</p>
+                </c:if>
+                <c:if test="${not empty DETAILS}">
+                    <c:forEach var="order" items="${DETAILS}">
+                        <table class="order">
+                            <tr>
+                                <td>Order ID</td>
+                                <td>Plant ID</td>
+                                <td>Plant Name</td>
+                                <td>Image</td>
+                                <td>Quantity</td>
+                            </tr>
+                            <tr>
+                                <td>${order.orderID}</td>
+                                <td>${order.plantID}</td>
+                                <td>${order.plantName}</td>
+                                <td> <img src="${order.imgPath}" class="plantimg" />
+                                    <br/>
+                                    ${order.price}
+                                </td>
+                                <td> ${order.quantity} </td>
+                                <c:set var="money" 
+                                       value="${money + order.price * order.quantity}"/>
+                            </tr>
+                        </table>
+                    </c:forEach>
+                    <h3> Total money: ${money} </h3>
+                </c:if>
+            </section>
+        </c:if>
+        <%@include file="footer.jsp" %>
     </body>
 </html>

@@ -28,7 +28,7 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "AddToCartServlet", urlPatterns = {"/AddToCartServlet"})
 public class AddToCartServlet extends HttpServlet {
 
-    private final String INDEX_PAGE_URL = "DispatchController?action=index";
+    private final String INDEX_PAGE_URL = "SearchServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,6 +51,9 @@ public class AddToCartServlet extends HttpServlet {
                 return;
             }
             int plantID = Integer.parseInt(plantIDString);
+            
+//            System.out.println(plantID);
+           
 
             // get session to store product id ==> get true
             HttpSession session = request.getSession();
@@ -58,17 +61,11 @@ public class AddToCartServlet extends HttpServlet {
                     = (HashMap<PlantDTO, Integer>) session.getAttribute("CART");
 
             // getplant
-            PlantDAO dao = PlantDAO.getDao();
+            PlantDAO dao = PlantDAO.getInstance();
             PlantDTO plant = dao.getPlant(plantID);
 
             if (plant == null) {
                 return;
-            }
-            
-            // handler url
-            String lastUrl = (String) session.getAttribute("lastUrl");
-            if (lastUrl != null) {
-                url = lastUrl;
             }
 
             // total amount of cart
@@ -100,14 +97,9 @@ public class AddToCartServlet extends HttpServlet {
 
             session.setAttribute("CART", cart);
             session.setAttribute("TOTAL", total);            
-        } catch (NamingException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (NumberFormatException ex) {
-            
+        } catch (NamingException | SQLException | NumberFormatException ex) {
         } finally {
-            response.sendRedirect(url);
+//            response.sendRedirect(url);
         }
     }
 

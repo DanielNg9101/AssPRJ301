@@ -4,6 +4,14 @@
         <param-name>countryName</param-name>
         <param-value>Viet Nam</param-value>
     </context-param>
+    <filter>
+        <filter-name>MainController</filter-name>
+        <filter-class>dacnt.controller.MainController</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>MainController</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>LoginServlet</servlet-name>
         <servlet-class>dacnt.controller.LoginServlet</servlet-class>
@@ -11,14 +19,6 @@
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>dacnt.controller.RegisterServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>SearchServlet</servlet-name>
-        <servlet-class>dacnt.controller.SearchServlet</servlet-class>
-        <init-param>
-            <param-name>language</param-name>
-            <param-value>Vietnamese</param-value>
-        </init-param>
     </servlet>
     <servlet>
         <servlet-name>SendOTP</servlet-name>
@@ -32,6 +32,62 @@
         <servlet-name>ViewPlantServlet</servlet-name>
         <servlet-class>dacnt.controller.ViewPlantServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchServlet</servlet-name>
+        <servlet-class>dacnt.controller.SearchServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewOrderDetailServlet</servlet-name>
+        <servlet-class>dacnt.controller.ViewOrderDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SaveShoppingCartServlet</servlet-name>
+        <servlet-class>dacnt.controller.SaveShoppingCartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManageAccountsServlet</servlet-name>
+        <servlet-class>dacnt.controller.ManageAccountsServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateStatusAccountServlet</servlet-name>
+        <servlet-class>dacnt.controller.UpdateStatusAccountServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RenderEditPlantServlet</servlet-name>
+        <servlet-class>dacnt.controller.RenderEditPlantServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeletePlantServlet</servlet-name>
+        <servlet-class>dacnt.controller.DeletePlantServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddPlantServlet</servlet-name>
+        <servlet-class>dacnt.controller.AddPlantServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManageCategoriesServlet</servlet-name>
+        <servlet-class>dacnt.controller.ManageCategoriesServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddCategoryServlet</servlet-name>
+        <servlet-class>dacnt.controller.AddCategoryServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteCategoryServlet</servlet-name>
+        <servlet-class>dacnt.controller.DeleteCategoryServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateCategoryServlet</servlet-name>
+        <servlet-class>dacnt.controller.UpdateCategoryServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewAddPlantServlet</servlet-name>
+        <servlet-class>dacnt.controller.ViewAddPlantServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ManageOrdersServlet</servlet-name>
+        <servlet-class>dacnt.controller.ManageOrdersServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -39,10 +95,6 @@
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/RegisterServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>SearchServlet</servlet-name>
-        <url-pattern>/SearchServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SendOTP</servlet-name>
@@ -56,13 +108,69 @@
         <servlet-name>ViewPlantServlet</servlet-name>
         <url-pattern>/ViewPlantServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchServlet</servlet-name>
+        <url-pattern>/SearchServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewOrderDetailServlet</servlet-name>
+        <url-pattern>/ViewOrderDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SaveShoppingCartServlet</servlet-name>
+        <url-pattern>/SaveShoppingCartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageAccountsServlet</servlet-name>
+        <url-pattern>/ManageAccountsServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateStatusAccountServlet</servlet-name>
+        <url-pattern>/UpdateStatusAccountServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RenderEditPlantServlet</servlet-name>
+        <url-pattern>/RenderEditPlantServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeletePlantServlet</servlet-name>
+        <url-pattern>/DeletePlantServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddPlantServlet</servlet-name>
+        <url-pattern>/AddPlantServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageCategoriesServlet</servlet-name>
+        <url-pattern>/ManageCategoriesServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCategoryServlet</servlet-name>
+        <url-pattern>/AddCategoryServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteCategoryServlet</servlet-name>
+        <url-pattern>/DeleteCategoryServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateCategoryServlet</servlet-name>
+        <url-pattern>/UpdateCategoryServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewAddPlantServlet</servlet-name>
+        <url-pattern>/ViewAddPlantServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ManageOrdersServlet</servlet-name>
+        <url-pattern>/ManageOrdersServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>SearchServlet</welcome-file>
     </welcome-file-list>
     <resource-ref>
         <res-ref-name>PlantDB</res-ref-name>

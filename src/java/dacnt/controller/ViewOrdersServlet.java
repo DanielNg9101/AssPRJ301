@@ -33,8 +33,8 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "ViewOrdersServlet", urlPatterns = {"/ViewOrdersServlet"})
 public class ViewOrdersServlet extends HttpServlet {
 
-    private final String PERSONAL_PAGE_URL = "DispatchController?action=personalPage";
-    private final String LOGIN_PAGE_URL = "DispatchController?action=loginHandler";
+    private final String PERSONAL_PAGE = "personalPage.jsp";
+    private final String LOGIN_PAGE = "login.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -49,30 +49,35 @@ public class ViewOrdersServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
 
-        String url = LOGIN_PAGE_URL;
+        String url = LOGIN_PAGE;
 
         try {
             HttpSession session = request.getSession(false);
             if (session == null) {
+                request.setAttribute("ERROR", "You must login to view orders");
                 return;
             } // end if session != null
 
-            AccountDTO currentUser = (AccountDTO) session.getAttribute("CURRENT_USER");
+            AccountDTO currentUser = (AccountDTO) session.getAttribute("USER");
             if (currentUser == null) {
+                request.setAttribute("ERROR", "You must login to view orders");
                 return;
             } // end if current user != null
 
-//            String email = (String) session.getAttribute("EMAIL");
-//            if (email == null) {
-//                return;
-//            } // end if email != null
             String email = currentUser.getEmail();
 
             OrderDAO dao = OrderDAO.getInstance();
-            url = PERSONAL_PAGE_URL;
+            url = PERSONAL_PAGE;
             String action = request.getParameter("action");
+            if (action == null) {
+                action = "viewOrders";
+            }
             if (action.equals("viewOrders")) {
                 String category = request.getParameter("category");
+
+                if (category == null) {
+                    category = "";
+                }
 
                 switch (category.trim()) {
                     case "completed":
@@ -85,13 +90,13 @@ public class ViewOrdersServlet extends HttpServlet {
                         dao.getOrders(email);
                         break;
                 }
-            } else {
+            } else if (action.equals("searchOrdersByDate")) {
                 // action.equals("searchOrdersByDate")
                 String from = request.getParameter("from");
                 String to = request.getParameter("to");
                 if (from.isEmpty() || to.isEmpty()) {
-                    String urlRewriting = "DispatchController?action=viewOrders&category=";
-                    url = urlRewriting;
+                    url = "viewOrders";
+                    return;
                 } else {
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     Date fromDate = new Date(df.parse(from).getTime());
@@ -104,20 +109,17 @@ public class ViewOrdersServlet extends HttpServlet {
             }
 
             ArrayList<OrderDTO> orders = dao.getOrdersList();
+//            System.out.println(orders);
             request.setAttribute("ORDERS", orders);
-
-//            orders = (ArrayList<OrderDTO>) request.getAttribute("ORDERS");
-//            for (OrderDTO order : orders) {
-//                System.out.println(order.getOrderID());
-//            }
-        } catch (NamingException ex) {
-            ex.printStackTrace();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } catch (ParseException ex) {
+//        } catch (NamingException | SQLException | ParseException ex) {
+        } catch (NamingException | SQLException | ParseException ex) {
             ex.printStackTrace();
         } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+            if (url.equals("viewOrders")) {
+                response.sendRedirect(url);
+            } else {
+                request.getRequestDispatcher(url).forward(request, response);
+            }
         }
     }
 
